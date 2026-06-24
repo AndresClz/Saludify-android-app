@@ -1,58 +1,48 @@
 package com.example.saludify.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
+private val SaludifyColorScheme = lightColorScheme(
+    primary                = BrandPrimary,
+    onPrimary              = TextOnPrimary,
+    primaryContainer       = BrandPrimarySurface,
+    onPrimaryContainer     = BrandPrimaryDark,
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    secondary              = SemanticInfo,
+    onSecondary            = TextOnPrimary,
+    secondaryContainer     = SemanticInfoSurface,
+    onSecondaryContainer   = SemanticInfo,
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary               = SemanticSuccess,
+    onTertiary             = TextOnPrimary,
+    tertiaryContainer      = SemanticSuccessSurface,
+    onTertiaryContainer    = SemanticSuccess,
+
+    error                  = SemanticDanger,
+    onError                = TextOnPrimary,
+    errorContainer         = SemanticDangerSurface,
+    onErrorContainer       = SemanticDanger,
+
+    background             = BackgroundApp,
+    onBackground           = TextDefault,
+
+    surface                = BackgroundSurface,
+    onSurface              = TextDefault,
+    surfaceVariant         = BackgroundSubtle,
+    onSurfaceVariant       = TextMuted,
+
+    outline                = BorderDefault,
+    outlineVariant         = BorderLight,
 )
 
 @Composable
-fun SaludifyTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
+fun SaludifyTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
+        colorScheme = SaludifyColorScheme,
+        typography  = Typography,
+        shapes      = SaludifyShapes,
+        content     = content
     )
 }
