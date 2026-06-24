@@ -1,0 +1,569 @@
+{
+  "$metadata": {
+    "product": "Saludify",
+    "version": "1.0.0",
+    "date": "2026-06-23",
+    "description": "Design tokens extraídos del flujo de onboarding mobile. Valores atómicos que definen el sistema visual de Saludify."
+  },
+
+  "color": {
+    "brand": {
+      "primary": {
+        "$value": "#1a5fce",
+        "$type": "color",
+        "$description": "Azul principal. Botones CTA, tabs activos, links, íconos de acción."
+      },
+      "primary-dark": {
+        "$value": "#0f3d8a",
+        "$type": "color",
+        "$description": "Azul oscuro. Gradientes, fondos de hero."
+      },
+      "primary-light": {
+        "$value": "#2e7de0",
+        "$type": "color",
+        "$description": "Azul claro. Extremo derecho de gradientes."
+      },
+      "primary-surface": {
+        "$value": "#e8effd",
+        "$type": "color",
+        "$description": "Superficie azul suave. Badges, fondos de ícono de acciones primarias, tab activo."
+      },
+      "primary-surface-strong": {
+        "$value": "#f0f5ff",
+        "$type": "color",
+        "$description": "Superficie azul para cards seleccionadas."
+      },
+      "primary-border": {
+        "$value": "#c7d9fc",
+        "$type": "color",
+        "$description": "Borde de cards con estado primario activo."
+      }
+    },
+
+    "text": {
+      "default": {
+        "$value": "#111827",
+        "$type": "color",
+        "$description": "Texto principal. Títulos, labels de peso fuerte."
+      },
+      "secondary": {
+        "$value": "#374151",
+        "$type": "color",
+        "$description": "Texto secundario. Subtítulos, labels de sección."
+      },
+      "muted": {
+        "$value": "#6b7280",
+        "$type": "color",
+        "$description": "Texto de apoyo. Descripción corta, metadata."
+      },
+      "placeholder": {
+        "$value": "#9ca3af",
+        "$type": "color",
+        "$description": "Placeholders, labels desactivados, texto de ayuda."
+      },
+      "disabled": {
+        "$value": "#b0bac8",
+        "$type": "color",
+        "$description": "Íconos y texto de elementos inactivos (tab bar inactivo)."
+      },
+      "on-primary": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "Texto sobre fondos primarios (botones azules)."
+      }
+    },
+
+    "semantic": {
+      "success": {
+        "default": {
+          "$value": "#16a34a",
+          "$type": "color",
+          "$description": "Verde principal. Estados OK, turno online, abierto."
+        },
+        "surface": {
+          "$value": "#f0fdf4",
+          "$type": "color",
+          "$description": "Superficie verde suave."
+        },
+        "surface-strong": {
+          "$value": "#dcfce7",
+          "$type": "color",
+          "$description": "Superficie verde de badges y chips."
+        }
+      },
+      "warning": {
+        "default": {
+          "$value": "#d97706",
+          "$type": "color",
+          "$description": "Amarillo principal. Alertas, vencimientos próximos."
+        },
+        "surface": {
+          "$value": "#fef9ee",
+          "$type": "color",
+          "$description": "Superficie amarilla suave."
+        },
+        "surface-strong": {
+          "$value": "#fef3c7",
+          "$type": "color",
+          "$description": "Superficie amarilla para badges."
+        },
+        "border": {
+          "$value": "#fde68a",
+          "$type": "color",
+          "$description": "Borde de banners de advertencia."
+        },
+        "icon": {
+          "$value": "#f59e0b",
+          "$type": "color",
+          "$description": "Íconos de advertencia, estrellas de rating."
+        }
+      },
+      "danger": {
+        "default": {
+          "$value": "#dc2626",
+          "$type": "color",
+          "$description": "Rojo principal. Cerrar sesión, errores, vencimientos."
+        },
+        "surface": {
+          "$value": "#fff5f5",
+          "$type": "color",
+          "$description": "Superficie roja suave."
+        },
+        "surface-strong": {
+          "$value": "#fee2e2",
+          "$type": "color",
+          "$description": "Superficie roja para badges y chips."
+        },
+        "border": {
+          "$value": "#fecaca",
+          "$type": "color",
+          "$description": "Borde de elementos con estado de error."
+        }
+      },
+      "info": {
+        "default": {
+          "$value": "#0284c7",
+          "$type": "color",
+          "$description": "Azul info. Mis turnos, calendar, destacados secundarios."
+        },
+        "surface": {
+          "$value": "#f0f9ff",
+          "$type": "color",
+          "$description": "Superficie info suave."
+        }
+      },
+      "purple": {
+        "default": {
+          "$value": "#9333ea",
+          "$type": "color",
+          "$description": "Historial de consultas, facturas."
+        },
+        "surface": {
+          "$value": "#faf5ff",
+          "$type": "color",
+          "$description": "Superficie morada suave."
+        }
+      },
+      "orange": {
+        "default": {
+          "$value": "#ea580c",
+          "$type": "color",
+          "$description": "Gestionar plan, presupuestos."
+        },
+        "surface": {
+          "$value": "#fff7ed",
+          "$type": "color",
+          "$description": "Superficie naranja suave."
+        }
+      }
+    },
+
+    "background": {
+      "app": {
+        "$value": "#f0f4fb",
+        "$type": "color",
+        "$description": "Fondo general de pantallas (body background)."
+      },
+      "surface": {
+        "$value": "#ffffff",
+        "$type": "color",
+        "$description": "Fondo de cards, modales, headers."
+      },
+      "subtle": {
+        "$value": "#f3f4f6",
+        "$type": "color",
+        "$description": "Fondo de chips inactivos, inputs, elementos secundarios."
+      },
+      "input": {
+        "$value": "#f3f6fc",
+        "$type": "color",
+        "$description": "Fondo de campos de búsqueda activos."
+      },
+      "segmented": {
+        "$value": "#e8edf5",
+        "$type": "color",
+        "$description": "Fondo del segmented control / tabs."
+      }
+    },
+
+    "border": {
+      "default": {
+        "$value": "#e9edf4",
+        "$type": "color",
+        "$description": "Borde estándar de cards y divisores."
+      },
+      "light": {
+        "$value": "#eef1f6",
+        "$type": "color",
+        "$description": "Borde de headers y separadores sutiles."
+      },
+      "strong": {
+        "$value": "#dde3ec",
+        "$type": "color",
+        "$description": "Líneas divisoras de secciones."
+      },
+      "muted": {
+        "$value": "#d1d5db",
+        "$type": "color",
+        "$description": "Bordes de chevrons y elementos de navegación."
+      },
+      "dashed": {
+        "$value": "#d1d5db",
+        "$type": "color",
+        "$description": "Bordes punteados (add integrante, ver más en cartilla)."
+      }
+    },
+
+    "gradient": {
+      "primary": {
+        "$value": "linear-gradient(138deg, #0f3d8a 0%, #1a5fce 55%, #2e7de0 100%)",
+        "$type": "gradient",
+        "$description": "Gradiente azul principal. Chat IA hero, splash."
+      }
+    }
+  },
+
+  "typography": {
+    "family": {
+      "base": {
+        "$value": "DM Sans, system-ui, sans-serif",
+        "$type": "fontFamily",
+        "$description": "Tipografía principal del sistema."
+      }
+    },
+    "size": {
+      "xs": {
+        "$value": "10px",
+        "$type": "fontSize",
+        "$description": "Labels de sección en caps, tab bar labels, metadata mínima."
+      },
+      "sm": {
+        "$value": "11px",
+        "$type": "fontSize",
+        "$description": "Badges, horarios, metadata secundaria."
+      },
+      "caption": {
+        "$value": "12px",
+        "$type": "fontSize",
+        "$description": "Subtítulos de lista, texto de apoyo, descripciones cortas."
+      },
+      "body-sm": {
+        "$value": "13px",
+        "$type": "fontSize",
+        "$description": "Body pequeño. FAQ, segmented control, CTAs secundarios."
+      },
+      "body": {
+        "$value": "14px",
+        "$type": "fontSize",
+        "$description": "Body estándar. Contenido principal, headers de pantalla."
+      },
+      "body-lg": {
+        "$value": "15px",
+        "$type": "fontSize",
+        "$description": "Nombres de médicos, títulos de cards, botones CTA."
+      },
+      "heading-sm": {
+        "$value": "16px",
+        "$type": "fontSize",
+        "$description": "Título de pantalla en header sticky."
+      },
+      "heading-md": {
+        "$value": "18px",
+        "$type": "fontSize",
+        "$description": "Títulos de sección medianos."
+      },
+      "heading-lg": {
+        "$value": "20px",
+        "$type": "fontSize",
+        "$description": "Nombre de usuario en Perfil."
+      },
+      "heading-xl": {
+        "$value": "22px",
+        "$type": "fontSize",
+        "$description": "Títulos de pantalla de flujos (Buscador, Confirmar)."
+      },
+      "display": {
+        "$value": "26px",
+        "$type": "fontSize",
+        "$description": "Títulos prominentes (¿Para quién? ¡Turno confirmado!)."
+      },
+      "display-lg": {
+        "$value": "32px",
+        "$type": "fontSize",
+        "$description": "Avatar inicial de perfil."
+      }
+    },
+    "weight": {
+      "regular": {
+        "$value": 400,
+        "$type": "fontWeight",
+        "$description": "Texto corriente."
+      },
+      "medium": {
+        "$value": 500,
+        "$type": "fontWeight",
+        "$description": "Énfasis ligero, labels de filtro."
+      },
+      "semibold": {
+        "$value": 600,
+        "$type": "fontWeight",
+        "$description": "Botones, títulos de items de lista, subtítulos."
+      },
+      "bold": {
+        "$value": 700,
+        "$type": "fontWeight",
+        "$description": "Títulos de pantalla, nombres, valores numéricos."
+      }
+    },
+    "letterSpacing": {
+      "tight": {
+        "$value": "-0.5px",
+        "$type": "letterSpacing",
+        "$description": "Títulos display grandes."
+      },
+      "snug": {
+        "$value": "-0.3px",
+        "$type": "letterSpacing",
+        "$description": "Headings medianos."
+      },
+      "caps": {
+        "$value": "0.09em",
+        "$type": "letterSpacing",
+        "$description": "Labels de sección en uppercase."
+      },
+      "caps-wide": {
+        "$value": "0.11em",
+        "$type": "letterSpacing",
+        "$description": "Dividers de sección en canvas."
+      }
+    },
+    "lineHeight": {
+      "tight": {
+        "$value": 1.2,
+        "$type": "lineHeight",
+        "$description": "Títulos grandes, display."
+      },
+      "snug": {
+        "$value": 1.4,
+        "$type": "lineHeight",
+        "$description": "Subtítulos, FAQ."
+      },
+      "normal": {
+        "$value": 1.5,
+        "$type": "lineHeight",
+        "$description": "Texto de cuerpo estándar."
+      },
+      "relaxed": {
+        "$value": 1.6,
+        "$type": "lineHeight",
+        "$description": "Respuestas de FAQ expandidas."
+      }
+    }
+  },
+
+  "spacing": {
+    "2": { "$value": "2px",  "$type": "spacing" },
+    "3": { "$value": "3px",  "$type": "spacing" },
+    "4": { "$value": "4px",  "$type": "spacing" },
+    "6": { "$value": "6px",  "$type": "spacing" },
+    "7": { "$value": "7px",  "$type": "spacing" },
+    "8": { "$value": "8px",  "$type": "spacing" },
+    "9": { "$value": "9px",  "$type": "spacing" },
+    "10": { "$value": "10px", "$type": "spacing" },
+    "12": { "$value": "12px", "$type": "spacing" },
+    "14": { "$value": "14px", "$type": "spacing", "$description": "Padding horizontal de cards, gap principal de items." },
+    "16": { "$value": "16px", "$type": "spacing" },
+    "18": { "$value": "18px", "$type": "spacing", "$description": "Padding horizontal de pantallas." },
+    "20": { "$value": "20px", "$type": "spacing" },
+    "22": { "$value": "22px", "$type": "spacing" },
+    "24": { "$value": "24px", "$type": "spacing" },
+    "28": { "$value": "28px", "$type": "spacing", "$description": "Padding inferior de CTAs." },
+    "32": { "$value": "32px", "$type": "spacing" }
+  },
+
+  "borderRadius": {
+    "sm": {
+      "$value": "3px",
+      "$type": "borderRadius",
+      "$description": "Bordes mínimos, líneas de documento."
+    },
+    "md": {
+      "$value": "9px",
+      "$type": "borderRadius",
+      "$description": "Íconos de categoría dentro de cards."
+    },
+    "icon": {
+      "$value": "11px",
+      "$type": "borderRadius",
+      "$description": "Contenedores de ícono en listas de directorio."
+    },
+    "icon-lg": {
+      "$value": "13px",
+      "$type": "borderRadius",
+      "$description": "Íconos grandes en listas de menú (Perfil, Atención, Trámites)."
+    },
+    "card": {
+      "$value": "14px",
+      "$type": "borderRadius",
+      "$description": "Cards de FAQ, teléfonos, sucursales."
+    },
+    "card-lg": {
+      "$value": "17px",
+      "$type": "borderRadius",
+      "$description": "Cards de médico, items de menú principales."
+    },
+    "card-xl": {
+      "$value": "18px",
+      "$type": "borderRadius",
+      "$description": "Cards hero (doctor en confirmar), cards de resumen."
+    },
+    "panel": {
+      "$value": "20px",
+      "$type": "borderRadius",
+      "$description": "Cards de resumen de turno confirmado."
+    },
+    "button": {
+      "$value": "14px",
+      "$type": "borderRadius",
+      "$description": "Botones CTA primarios."
+    },
+    "button-sm": {
+      "$value": "11px",
+      "$type": "borderRadius",
+      "$description": "Botones secundarios inline (Reservar)."
+    },
+    "chip": {
+      "$value": "10px",
+      "$type": "borderRadius",
+      "$description": "Chips de horario, filtros de fecha."
+    },
+    "badge": {
+      "$value": "99px",
+      "$type": "borderRadius",
+      "$description": "Badges pill (plan, estado, cantidad)."
+    },
+    "segmented": {
+      "$value": "12px",
+      "$type": "borderRadius",
+      "$description": "Contenedor del segmented control."
+    },
+    "segmented-item": {
+      "$value": "10px",
+      "$type": "borderRadius",
+      "$description": "Opción activa dentro del segmented control."
+    },
+    "full": {
+      "$value": "50%",
+      "$type": "borderRadius",
+      "$description": "Avatares, íconos circulares."
+    }
+  },
+
+  "shadow": {
+    "card": {
+      "$value": "0 1px 4px rgba(0, 0, 0, 0.04)",
+      "$type": "shadow",
+      "$description": "Sombra estándar de cards y listas."
+    },
+    "card-hover": {
+      "$value": "0 2px 8px rgba(26, 95, 206, 0.12)",
+      "$type": "shadow",
+      "$description": "Sombra de card seleccionada / más cercana (sucursal)."
+    },
+    "segmented": {
+      "$value": "0 1px 3px rgba(0, 0, 0, 0.10)",
+      "$type": "shadow",
+      "$description": "Sombra de la opción activa en segmented control."
+    },
+    "primary-md": {
+      "$value": "0 8px 24px rgba(26, 95, 206, 0.26)",
+      "$type": "shadow",
+      "$description": "Sombra del hero de Chat IA."
+    },
+    "primary-lg": {
+      "$value": "0 10px 28px rgba(26, 95, 206, 0.28)",
+      "$type": "shadow",
+      "$description": "Sombra del hero full-width (versión anterior)."
+    },
+    "avatar": {
+      "$value": "0 6px 20px rgba(26, 95, 206, 0.24)",
+      "$type": "shadow",
+      "$description": "Sombra del avatar grande en Perfil."
+    }
+  },
+
+  "component": {
+    "avatar": {
+      "size-sm": { "$value": "38px", "$type": "sizing" },
+      "size-md": { "$value": "42px", "$type": "sizing" },
+      "size-lg": { "$value": "52px", "$type": "sizing" },
+      "size-xl": { "$value": "80px", "$type": "sizing" },
+      "size-hero": { "$value": "88px", "$type": "sizing" }
+    },
+    "icon-container": {
+      "size-sm": { "$value": "32px", "$type": "sizing", "$description": "Ícono en grilla de especialidades." },
+      "size-md": { "$value": "38px", "$type": "sizing", "$description": "Ícono en listas de directorio." },
+      "size-lg": { "$value": "42px", "$type": "sizing", "$description": "Ícono en listas de menú." },
+      "size-xl": { "$value": "46px", "$type": "sizing", "$description": "Ícono en hero de Chat IA." }
+    },
+    "button": {
+      "height": { "$value": "52px", "$type": "sizing", "$description": "Altura del botón CTA primario." },
+      "padding-y": { "$value": "17px", "$type": "spacing" },
+      "font-size": { "$value": "15px", "$type": "fontSize" },
+      "font-weight": { "$value": 600, "$type": "fontWeight" }
+    },
+    "tab-bar": {
+      "height": { "$value": "56px", "$type": "sizing" },
+      "padding-y": { "$value": "10px", "$type": "spacing" },
+      "active-pill-width": { "$value": "44px", "$type": "sizing" },
+      "active-pill-height": { "$value": "26px", "$type": "sizing" }
+    },
+    "step-indicator": {
+      "height": { "$value": "3px", "$type": "sizing" },
+      "gap": { "$value": "4px", "$type": "spacing" },
+      "color-active": { "$value": "#1a5fce", "$type": "color" },
+      "color-inactive": { "$value": "#e5e7eb", "$type": "color" }
+    },
+    "segmented-control": {
+      "padding": { "$value": "3px", "$type": "spacing" },
+      "gap": { "$value": "2px", "$type": "spacing" },
+      "item-padding-y": { "$value": "9px", "$type": "spacing" }
+    },
+    "badge": {
+      "padding-x": { "$value": "9px", "$type": "spacing" },
+      "padding-y": { "$value": "3px", "$type": "spacing" },
+      "font-size": { "$value": "11px", "$type": "fontSize" },
+      "font-weight": { "$value": 600, "$type": "fontWeight" }
+    },
+    "list-item": {
+      "padding-x": { "$value": "16px", "$type": "spacing" },
+      "padding-y": { "$value": "16px", "$type": "spacing" },
+      "gap": { "$value": "14px", "$type": "spacing" },
+      "gap-between-items": { "$value": "10px", "$type": "spacing" }
+    },
+    "screen": {
+      "padding-x": { "$value": "18px", "$type": "spacing", "$description": "Padding horizontal estándar de todas las pantallas." },
+      "padding-top": { "$value": "20px", "$type": "spacing" }
+    }
+  }
+}
