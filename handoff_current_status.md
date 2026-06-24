@@ -8,7 +8,7 @@
 
 ## Arquitectura actual (post-refactor)
 
-Estructura simplificada para mock. Sin capas de dominio ni repositorios — todo el dato fake está centralizado en `MockData.kt`.
+Estructura simplificada para mock. Sin capas de dominio ni repositorios.
 
 ```
 com.example.saludify/
@@ -19,20 +19,34 @@ com.example.saludify/
 │   ├── components/        BottomBar.kt
 │   ├── navigation/        NavGraph.kt, Route.kt
 │   └── screens/
+│       ├── onboarding/    OnboardingScreen.kt  ← PRÓXIMA A CREAR
 │       ├── login/         LoginScreen.kt + LoginViewModel.kt
-│       ├── home/          HomeScreen.kt  (datos desde MockData directo)
+│       ├── home/          HomeScreen.kt
 │       ├── attention/     AttentionScreen.kt
 │       ├── procedures/    ProceduresScreen.kt
 │       ├── help/          HelpScreen.kt
 │       ├── profile/       ProfileScreen.kt
 │       └── main/          MainScreen.kt
-└── ui/theme/              Color.kt, Theme.kt, Type.kt
+└── ui/theme/              Color.kt, Theme.kt, Type.kt, Shape.kt
 ```
 
 **Reglas:**
 - ViewModel solo si hay estado interactivo (campos, errores). Actualmente solo `LoginViewModel`.
-- Si una pantalla necesita ViewModel en el futuro, va en la misma carpeta que su Screen.
+- Si una pantalla necesita ViewModel, va en la misma carpeta que su Screen.
 - Datos hardcodeados siempre en `MockData.kt`, nunca inline en los Composables.
+
+---
+
+## Flujo de navegación definido
+
+```
+OnboardingScreen
+  ├── "Soy afiliado"      → LoginScreen → MainScreen
+  └── "Quiero afiliarme"  → (sin diseño, SIN IMPLEMENTAR — botón deshabilitado o toast)
+```
+
+**Ruta en NavGraph:**  
+`Onboarding` (startDestination) → `Login` → `Main`
 
 ---
 
@@ -42,79 +56,82 @@ com.example.saludify/
 
 | # | Pantalla | Estado | Notas |
 |---|---|---|---|
-| 01 | Splash | ❌ No existe | Crear `SplashScreen.kt` |
-| 02 | Login / Bienvenida | 🟡 Funcional, sin diseño | Rediseñar con brand colors, ilustración, layout del README |
-| 03 | Nueva contraseña | ❌ No existe | Pantalla simple, baja prioridad |
-| 04 | Onboarding (notificaciones) | ❌ No existe | Baja prioridad |
-| 05 | Home | 🟡 Datos ok, sin diseño | Rediseñar: header, credencial, grid 2×2, próximo turno, tab bar custom |
-| 06 | Atención (hub) | 🔴 Stub vacío | Crear lista con cards según README §06 |
-| 07 | Trámites (hub) | 🔴 Stub vacío | Crear lista con cards según README §07 |
-| 08 | Perfil | 🔴 Stub vacío | Crear con avatar hero, menú, cerrar sesión |
-| 09 | Ayuda | 🔴 Stub vacío | Crear con chat, FAQ acordeón, segmented Teléfonos/Sucursales |
-| 09b | Ayuda → Sucursales | ❌ No existe | Sub-vista de Ayuda |
+| — | OnboardingScreen | ❌ Por crear | Bienvenida con 2 CTAs: "Soy afiliado" → Login, "Quiero afiliarme" → deshabilitado |
+| — | LoginScreen | 🟡 Funcional, sin diseño | Rediseñar: "Ingresa a tu cuenta", campo email + contraseña, CTA |
+| 05 | HomeScreen | 🟡 Datos ok, sin diseño | Header, credencial, grid 2×2, próximo turno, tab bar custom |
+| 06 | AttentionScreen | 🔴 Stub vacío | Lista de cards según README §06 |
+| 07 | ProceduresScreen | 🔴 Stub vacío | Lista de cards según README §07 |
+| 08 | ProfileScreen | 🔴 Stub vacío | Avatar hero, menú, cerrar sesión |
+| 09 | HelpScreen | 🔴 Stub vacío | Chat IA hero, FAQ acordeón, segmented Teléfonos/Sucursales |
+| 01 | SplashScreen | ❌ No existe | Gradiente + logo + tagline + barra de carga. Prioridad baja. |
 
-### Flujo 2 — Sacar Turno
+### Flujo 2 — Sacar Turno (todo pendiente)
 
-| # | Pantalla | Estado | Notas |
-|---|---|---|---|
-| 10 | ¿Para quién? | ❌ No existe | Primer paso del flujo |
-| 11 | Buscador de especialidad | ❌ No existe | Segundo paso |
-| 12 | Resultados (Turnos / Cartilla) | ❌ No existe | Tabs sticky, cards de turno |
-| 12b | Resultados → Cartilla | ❌ No existe | Sub-tab de Resultados |
-| 13 | Confirmar turno | ❌ No existe | Cuarto paso, step indicator 4/4 |
-| 14 | Turno confirmado | ❌ No existe | Pantalla de éxito con animación |
+| # | Pantalla | Estado |
+|---|---|---|
+| 10 | ¿Para quién? | ❌ No existe |
+| 11 | Buscador de especialidad | ❌ No existe |
+| 12 | Resultados (Turnos / Cartilla) | ❌ No existe |
+| 13 | Confirmar turno | ❌ No existe |
+| 14 | Turno confirmado | ❌ No existe |
 
 ---
 
 ## Sistema de diseño — estado de implementación
 
-| Archivo | Estado | Tarea |
-|---|---|---|
-| `ui/theme/Color.kt` | 🔴 Colores del template (Purple) | Reescribir con todos los tokens del README |
-| `ui/theme/Theme.kt` | 🔴 Dynamic Color activo | Deshabilitar dynamic color, aplicar SaludifyColorScheme |
-| `ui/theme/Type.kt` | 🔴 Default Material 3 | Configurar DM Sans (Google Fonts) con escala del README |
-| `ui/theme/Shape.kt` | ❌ No existe | Crear con radios: card-lg 17dp, card 14dp, button 14dp, badge 99dp |
-| `ui/theme/Spacing.kt` | ❌ No existe | Opcional — constantes de padding frecuentes |
+| Archivo | Estado |
+|---|---|
+| `ui/theme/Color.kt` | ✅ Completo — 35 colores según tokens |
+| `ui/theme/Theme.kt` | ✅ Completo — SaludifyTheme, light only, sin dynamic color |
+| `ui/theme/Type.kt` | ✅ Completo — DM Sans variable font embebida, 13 estilos M3 |
+| `ui/theme/Shape.kt` | ✅ Completo — SaludifyShapes (M3) + SaludifyRadius (tokens nombrados) |
+| `res/font/dm_sans.ttf` | ✅ Variable font embebida (400–700) |
 
 ---
 
-## Decisiones de arquitectura para el mock
+## Spec de OnboardingScreen (próxima pantalla)
 
-- **Sin ViewModels para pantallas estáticas.** Datos hardcodeados desde `MockData`.
-- **ViewModel solo si hay estado interactivo real** (ej: campo de búsqueda, accordion FAQ, tabs). Va en la misma carpeta que su Screen.
-- **NavGraph se extiende** con las rutas del flujo Sacar Turno como nested navigation.
+Diseño libre (no está en el README), basado en el patrón de la app:
+
+- **Fondo:** blanco (`BackgroundSurface`)
+- **Hero superior (~40%):** `Box` con `Brush.linearGradient(BrandPrimaryDark → BrandPrimary)`, logo "Saludify" centrado en blanco, tagline abajo
+- **Título:** "Bienvenido a Saludify" — `displayMedium` (26sp Bold)
+- **Subtítulo:** "Tu obra social en tu bolsillo" — `bodyLarge` (14sp), `TextMuted`
+- **Botón primario:** "Soy afiliado" — full width, 52dp, `SaludifyRadius.button`, `BrandPrimary`
+- **Botón secundario:** "Quiero afiliarme" — `TextButton` o outlined, `BrandPrimary`, navega a nada (Toast "Próximamente" o no-op)
+- **Navegación:** `onAfiliadoClick: () -> Unit` como parámetro del Composable
 
 ---
 
-## Orden de implementación sugerido
+## Spec de LoginScreen (pantalla siguiente)
 
-1. **Sistema de diseño** (`Color.kt`, `Theme.kt`, `Type.kt`, `Shape.kt`) — base de todo
-2. **SplashScreen** — fácil de hacer bien con un gradiente
-3. **LoginScreen** — rediseño UI
-4. **HomeScreen** — pantalla más compleja del flujo 1, pero la más visible
-5. **BottomBar custom** — pill animado, íconos Material Symbols
-6. **AttentionScreen, TrámitesScreen** — mismo componente reutilizable
-7. **ProfileScreen** — avatar hero + menú
-8. **HelpScreen** — acordeón + segmented
-9. **Flujo Sacar Turno** (4 pantallas) — el más elaborado, dejarlo para el final
+Del README §02 + decisiones tomadas:
+
+- **Título:** "Ingresa a tu cuenta" — `displayMedium` (26sp Bold)
+- **Subtítulo:** `bodyLarge` (14sp), `TextMuted`
+- **Campo email:** label separado encima, `OutlinedTextField` con `shape = SaludifyRadius.card`, borde `BorderDefault` en idle, `BrandPrimary` en foco
+- **Campo contraseña:** igual al de email, con `PasswordVisualTransformation`
+- **Auth:** por email (`john.doe@email.com` / `1234`) — actualizar `MockData.autenticar()` y `LoginViewModel`
+- **Botón CTA:** "Ingresar" — full width, 52dp, `SaludifyRadius.button`
+- **Link:** "Olvidé mi contraseña" — `TextButton`, `BrandPrimary`, 13sp, no-op por ahora
+- **Error:** texto rojo debajo del botón, ya manejado en `LoginViewModel`
 
 ---
 
 ## Credenciales mock (para demo)
 
-| DNI | Contraseña |
+| Email | Contraseña |
 |---|---|
-| 12345678 | 1234 |
-| 87654321 | abcd |
+| john.doe@email.com | 1234 |
 
 ---
 
 ## Progreso general
 
 ```
-Sistema de diseño    [ ] [ ] [ ] [ ]   0/4 archivos
-Flujo 1 (Onboarding) [x] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]   1/9 (solo nav funciona)
-Flujo 2 (Turno)      [ ] [ ] [ ] [ ] [ ]   0/5
+Sistema de diseño    [✅][✅][✅][✅]   4/4
+Flujo 1              [ ][ ][ ][ ][ ][ ][ ][ ]   0/8 pantallas con diseño
+Flujo 2              [ ][ ][ ][ ][ ]   0/5
 ```
 
-> Última actualización: 2026-06-23
+> Última actualización: 2026-06-24
