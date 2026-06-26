@@ -89,28 +89,34 @@ primary-md   0 8px 24px rgba(26,95,206,.26)    → Hero cards
 
 ---
 
-#### 02 · Bienvenida / Login
-- Fondo: blanco
-- Ilustración superior: área de color con logo
-- Título: "Bienvenido a Saludify", `fontSize: 26sp`, `fontWeight: Bold`, `letterSpacing: -0.5`
-- Subtítulo: color `text.muted`, `fontSize: 14sp`
-- Campo de email: borde `border.default`, `radius: card`, `padding: 14dp 16dp`
-- Campo de contraseña: idéntico al de email
-- Botón CTA: fondo `brand.primary`, `radius: button`, `height: 52dp`, texto blanco `fontWeight: SemiBold`
-- Link "Olvidé mi contraseña": color `brand.primary`, `fontSize: 13sp`
+#### 02 · Bienvenida (Onboarding)
+- Fondo: `#f6f9ff` (muy azul claro, similar a `brand.primary-surface-strong`)
+- Logo row arriba: badge cuadrado 28dp "S" azul + "Saludify" texto azul
+- Título: "Bienvenido/a", `fontSize: 28sp`, `fontWeight: Bold`, `letterSpacing: -0.6`
+- Subtítulo: "Gestioná tu cobertura médica desde el celular, sin filas ni llamados.", `text.muted`, `fontSize: 14sp`
+- Dos **cards** de opción (no botones): fondo blanco, `radius: 18dp`, borde 1.5dp `#e5e7eb`, sombra leve
+  - "Soy afiliado" / "Ingresá con tu DNI" — ícono círculo outline azul, chevron azul
+  - "Quiero afiliarme" / "Conocé nuestros planes" — ícono cruz verde, chevron gris (deshabilitado)
+- Footer legal: "Al continuar aceptás los Términos y condiciones y la Política de privacidad", `fontSize: 11sp`, links en `brand.primary`
 
 ---
 
-#### 03 · Nueva contraseña
+#### 03 · Login
+- Fondo: blanco
+- Back arrow arriba izquierda
+- Título: "Ingresá a tu cuenta", `fontSize: 28sp`, `fontWeight: Bold`, `letterSpacing: -0.6`
+- Subtítulo: "Usá tu DNI como nombre de usuario.", `text.muted`, `fontSize: 14sp`
+- **Campo DNI** (label uppercase encima): fondo `#f9fafb`, `radius: 13dp`, borde `border.default` idle / `brand.primary` foco
+- **Campo Contraseña**: igual, con ojo toggle derecha + link "¿Olvidaste tu contraseña?" abajo derecha
+- Auth: DNI `12345678` / contraseña `1234`
+- CTA "Ingresar": `brand.primary`, `radius: button`, padding vertical 17dp
+
+---
+
+#### 04 · Nueva contraseña
 - Similar al login
 - Instrucción de validación: texto `text.muted`, `fontSize: 12sp`
 - Campo activo muestra borde `brand.primary` de `2dp`
-
----
-
-#### 04 · Onboarding (permiso de notificaciones)
-- Pantalla centrada con ilustración
-- Botón primario y botón "Ahora no" en texto plano
 
 ---
 
