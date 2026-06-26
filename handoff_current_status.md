@@ -2,7 +2,7 @@
 
 > Objetivo: mock de alta fidelidad para demo en dispositivo real (Android Studio).
 > No es una app de producción. Hardcodear datos está bien.
-> Fuente de verdad de diseño: `README.md` (tokens, pantallas, interacciones).
+> **Fuente de verdad de diseño: `docs/saludify-standalone.html`** — prevalece sobre este doc y sobre README.md.
 
 ---
 
@@ -19,14 +19,14 @@ com.example.saludify/
 │   ├── components/        BottomBar.kt
 │   ├── navigation/        NavGraph.kt, Route.kt
 │   └── screens/
-│       ├── onboarding/    OnboardingScreen.kt  ← PRÓXIMA A CREAR
-│       ├── login/         LoginScreen.kt + LoginViewModel.kt
-│       ├── home/          HomeScreen.kt
-│       ├── attention/     AttentionScreen.kt
-│       ├── procedures/    ProceduresScreen.kt
-│       ├── help/          HelpScreen.kt
-│       ├── profile/       ProfileScreen.kt
-│       └── main/          MainScreen.kt
+│       ├── onboarding/    OnboardingScreen.kt  ✅
+│       ├── login/         LoginScreen.kt + LoginViewModel.kt  ✅
+│       ├── home/          HomeScreen.kt  🟡 (datos ok, sin diseño visual)
+│       ├── attention/     AttentionScreen.kt  🔴 stub
+│       ├── procedures/    ProceduresScreen.kt  🔴 stub
+│       ├── help/          HelpScreen.kt  🔴 stub
+│       ├── profile/       ProfileScreen.kt  🔴 stub
+│       └── main/          MainScreen.kt  (contenedor del tab bar)
 └── ui/theme/              Color.kt, Theme.kt, Type.kt, Shape.kt
 ```
 
@@ -42,11 +42,14 @@ com.example.saludify/
 ```
 OnboardingScreen
   ├── "Soy afiliado"      → LoginScreen → MainScreen
-  └── "Quiero afiliarme"  → (sin diseño, SIN IMPLEMENTAR — botón deshabilitado o toast)
+  └── "Quiero afiliarme"  → no-op (onClick vacío)
 ```
 
-**Ruta en NavGraph:**  
-`Onboarding` (startDestination) → `Login` → `Main`
+**NavGraph:** `Onboarding` (startDestination) → `Login` → `Main`
+
+**Transiciones:** slide horizontal estilo iOS implementado en `NavGraph.kt`:
+- Push: nueva pantalla entra desde la derecha, la actual sale un tercio a la izquierda
+- Pop: pantalla actual sale a la derecha, la anterior vuelve desde la izquierda
 
 ---
 
@@ -56,11 +59,11 @@ OnboardingScreen
 
 | # | Pantalla | Estado | Notas |
 |---|---|---|---|
-| — | OnboardingScreen | ❌ Por crear | Bienvenida con 2 CTAs: "Soy afiliado" → Login, "Quiero afiliarme" → deshabilitado |
-| — | LoginScreen | 🟡 Funcional, sin diseño | Rediseñar: "Ingresa a tu cuenta", campo email + contraseña, CTA |
-| 05 | HomeScreen | 🟡 Datos ok, sin diseño | Header, credencial, grid 2×2, próximo turno, tab bar custom |
-| 06 | AttentionScreen | 🔴 Stub vacío | Lista de cards según README §06 |
-| 07 | ProceduresScreen | 🔴 Stub vacío | Lista de cards según README §07 |
+| — | OnboardingScreen | ✅ Implementada | Cards "Soy afiliado" / "Quiero afiliarme", fondo plano, footer legal |
+| — | LoginScreen | ✅ Implementada | DNI + contraseña, back arrow, toggle visibility, error state |
+| 05 | HomeScreen | ✅ Implementada | Header sticky, credencial gradiente, token, próximo turno, accesos rápidos 2×2 |
+| 06 | AttentionScreen | 🔴 Stub vacío | Lista de cards según HTML §06 |
+| 07 | ProceduresScreen | 🔴 Stub vacío | Lista de cards según HTML §07 |
 | 08 | ProfileScreen | 🔴 Stub vacío | Avatar hero, menú, cerrar sesión |
 | 09 | HelpScreen | 🔴 Stub vacío | Chat IA hero, FAQ acordeón, segmented Teléfonos/Sucursales |
 | 01 | SplashScreen | ❌ No existe | Gradiente + logo + tagline + barra de carga. Prioridad baja. |
@@ -87,51 +90,99 @@ OnboardingScreen
 | `ui/theme/Shape.kt` | ✅ Completo — SaludifyShapes (M3) + SaludifyRadius (tokens nombrados) |
 | `res/font/dm_sans.ttf` | ✅ Variable font embebida (400–700) |
 
----
-
-## Spec de OnboardingScreen (próxima pantalla)
-
-Diseño libre (no está en el README), basado en el patrón de la app:
-
-- **Fondo:** blanco (`BackgroundSurface`)
-- **Hero superior (~40%):** `Box` con `Brush.linearGradient(BrandPrimaryDark → BrandPrimary)`, logo "Saludify" centrado en blanco, tagline abajo
-- **Título:** "Bienvenido a Saludify" — `displayMedium` (26sp Bold)
-- **Subtítulo:** "Tu obra social en tu bolsillo" — `bodyLarge` (14sp), `TextMuted`
-- **Botón primario:** "Soy afiliado" — full width, 52dp, `SaludifyRadius.button`, `BrandPrimary`
-- **Botón secundario:** "Quiero afiliarme" — `TextButton` o outlined, `BrandPrimary`, navega a nada (Toast "Próximamente" o no-op)
-- **Navegación:** `onAfiliadoClick: () -> Unit` como parámetro del Composable
+**Dependencias agregadas en esta sesión:**
+- `androidx.compose.material:material-icons-extended` (versión via BOM, en `app/build.gradle.kts`)
 
 ---
 
-## Spec de LoginScreen (pantalla siguiente)
+## Spec de OnboardingScreen — extraída del HTML (frame 02 · Bienvenida)
 
-Del README §02 + decisiones tomadas:
+- **Fondo:** `#f6f9ff` ≈ `BrandPrimarySurfaceStrong` — sin gradiente, pantalla plana
+- **Padding:** top 30dp, horizontal 22dp, bottom 38dp
+- **Logo row** (margin-bottom 48dp):
+  - Badge 28×28dp, `BrandPrimary`, `RoundedCornerShape(8.dp)`, letra "S" blanca 12sp ExtraBold
+  - Texto "Saludify" 17sp Bold, `BrandPrimary`, letterSpacing -0.3sp
+- **Heading:** "Bienvenido/a" — 28sp Bold, `TextDefault`, lineHeight 1.2, letterSpacing -0.6sp, margin-bottom 10dp
+- **Subtítulo:** "Gestioná tu cobertura médica desde el celular, sin filas ni llamados." — 14sp, `TextMuted`, lineHeight 1.6, margin-bottom 38dp
+- **Dos cards** (gap 13dp): fondo blanco, `RoundedCornerShape(18.dp)`, borde 1.5dp `BorderDefault`, elevación 2dp
+  - Card 1 "Soy afiliado": ícono círculo outline `BrandPrimary`, chevron `BrandPrimary`, subtítulo "Ingresá con tu DNI"
+  - Card 2 "Quiero afiliarme": ícono `Icons.Filled.Add` `SemanticSuccess`, chevron `TextPlaceholder`, subtítulo "Conocé nuestros planes", onClick = no-op
+- **Spacer(weight 1f)** + Footer legal con links `BrandPrimary` no-op
 
-- **Título:** "Ingresa a tu cuenta" — `displayMedium` (26sp Bold)
-- **Subtítulo:** `bodyLarge` (14sp), `TextMuted`
-- **Campo email:** label separado encima, `OutlinedTextField` con `shape = SaludifyRadius.card`, borde `BorderDefault` en idle, `BrandPrimary` en foco
-- **Campo contraseña:** igual al de email, con `PasswordVisualTransformation`
-- **Auth:** por email (`john.doe@email.com` / `1234`) — actualizar `MockData.autenticar()` y `LoginViewModel`
-- **Botón CTA:** "Ingresar" — full width, 52dp, `SaludifyRadius.button`
-- **Link:** "Olvidé mi contraseña" — `TextButton`, `BrandPrimary`, 13sp, no-op por ahora
-- **Error:** texto rojo debajo del botón, ya manejado en `LoginViewModel`
+---
+
+## Spec de LoginScreen — extraída del HTML (frame 03 · Login)
+
+> Auth es por **DNI** (no email). `LoginViewModel` y `MockData.autenticar()` ya están correctos.
+
+- **Fondo:** blanco. **Padding:** top 24dp, horizontal 22dp, bottom 38dp
+- **Back arrow** arriba izquierda → `navController.popBackStack()`
+- **Heading:** "Ingresá a\ntu cuenta" — 28sp Bold, letterSpacing -0.6sp
+- **Subtítulo:** "Usá tu DNI como nombre de usuario." — 14sp `TextMuted`
+- **Campos** con `BasicTextField` custom (label uppercase encima, borde reactivo al foco):
+  - DNI: placeholder "12 345 678", `KeyboardType.Number`, máx 11 dígitos
+  - Contraseña: `PasswordVisualTransformation`, toggle ojo derecha, link "¿Olvidaste tu contraseña?" abajo-derecha no-op
+- **Error:** `SemanticDanger` 13sp, aparece entre campos y CTA
+- **CTA "Ingresar":** full width 52dp, `SaludifyRadius.button`, `BrandPrimary`
 
 ---
 
 ## Credenciales mock (para demo)
 
-| Email | Contraseña |
+| DNI | Contraseña |
 |---|---|
-| john.doe@email.com | 1234 |
+| 12345678 | 1234 |
 
 ---
 
 ## Progreso general
 
 ```
-Sistema de diseño    [✅][✅][✅][✅]   4/4
-Flujo 1              [ ][ ][ ][ ][ ][ ][ ][ ]   0/8 pantallas con diseño
-Flujo 2              [ ][ ][ ][ ][ ]   0/5
+Sistema de diseño    [✅][✅][✅][✅]        4/4
+Flujo 1              [✅][✅][✅][ ][ ][ ][ ][ ]   3/8 pantallas con diseño
+Flujo 2              [ ][ ][ ][ ][ ]            0/5
 ```
+
+---
+
+## Spec de HomeScreen — extraída del HTML (frame 05 · Home)
+
+- **Fondo:** `BackgroundApp` (`#f0f4fb`)
+- **HomeHeader (sticky):**
+  - Fondo blanco, padding 14dp/18dp, `HorizontalDivider` `BorderLight` abajo
+  - Avatar 38dp `BrandPrimary` circle, inicial del nombre blanca 15sp Bold
+  - "Buenos días," 11sp `TextPlaceholder` / "Nombre Apellido" 15sp Bold `TextDefault` letterSpacing -0.2sp
+  - Bell icon 38dp `BackgroundSubtle` circle, badge rojo 8dp con borde blanco 12dp
+
+- **CredencialesSection** (padding 20dp top):
+  - Label "Tus credenciales" 13sp SemiBold `TextSecondary` + "Ver todas" 12sp `BrandPrimary`
+  - Tarjeta gradiente `linearGradient(0,0 → ∞,∞)`: `BrandPrimaryDark 0%` → `BrandPrimary 52%` → `BrandPrimaryLight 100%`
+  - `SaludifyRadius.panel` (20dp), `shadow(10.dp)`, 2 círculos decorativos semitransparentes
+  - "Saludify" 15sp Bold + chip rectangular (32×22dp blanco semitransparente)
+  - "0000 · 0000 · 1234" 15sp letterSpacing 0.2em
+  - TITULAR / nombre 14sp SemiBold — PLAN / "Premium" 13sp SemiBold
+  - 2 dots de carrusel (20×5dp activo / 5dp inactivo)
+
+- **TokenSection** (padding 18dp top):
+  - Card blanca `SaludifyRadius.cardLg` + `BorderDefault`
+  - "842 619" 30sp Bold letterSpacing 0.24em + "Válido por 23:47 hs · Tocá para copiar"
+  - Ícono refresh 42dp `BrandPrimarySurface` `SaludifyRadius.iconLg`
+
+- **ProximosTurnosSection** (padding 18dp top):
+  - Card: badge fecha 46dp `BrandPrimarySurface` (mes 9sp + día 20sp) + info médico
+  - Chips redondeados `BackgroundSubtle`: "Lun · 10:30 hs" y "Hospital Central"
+
+- **AccesosRapidosSection** (padding 18dp top):
+  - 2 filas × 2 columnas, gap 12dp, `weight(1f)` por columna
+  - Sacar turno (`BrandPrimarySurface`/`Add`) · Mis turnos (`SemanticOrangeSurface`/`CalendarToday`)
+  - Reintegros (`SemanticSuccessSurface`/`ArrowDownward`) · Cartilla (`SemanticPurpleSurface`/`Apps`)
+
+- **BottomBar (custom):** Reemplaza `NavigationBar` con `Row` manual
+  - Activo: pill 44×26dp `BrandPrimarySurface` badge radius, ícono 16dp `BrandPrimary`, label 10sp SemiBold `BrandPrimary`
+  - Inactivo: ícono 16dp `TextDisabled`, label 10sp Normal `TextPlaceholder`
+  - Ícono de cada tab: Home / Add / Menu / Help / Person
+  - `navigationBarsPadding()` para sistema de navegación
+
+- **Cambios en MockData:** usuario "María González", `Turno` con campos `mes`, `dia`, `diaSemana`, `hora`, `lugar`, `medico`
 
 > Última actualización: 2026-06-24

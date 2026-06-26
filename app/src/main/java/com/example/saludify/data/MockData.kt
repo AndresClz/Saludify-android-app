@@ -10,10 +10,10 @@ object MockData {
     val usuarios = listOf(
         Usuario(
             id = 1,
-            nombre = "John",
-            apellido = "Doe",
+            nombre = "María",
+            apellido = "González",
             dni = "12345678",
-            email = "john.doe@email.com",
+            email = "maria.gonzalez@email.com",
             password = "1234"
         )
     )
@@ -29,14 +29,18 @@ object MockData {
     val proximoTurno = Turno(
         id = 1,
         especialidad = "Cardiología",
-        fecha = "25/06/2026",
-        hora = "15:00"
+        medico = "Dr. Roberto Silva",
+        mes = "Jun",
+        dia = "23",
+        diaSemana = "Lun",
+        hora = "10:30 hs",
+        lugar = "Hospital Central"
     )
 
     val obraSocial = ObraSocial(
         id = 1,
-        nombre = "OSDE",
-        numeroAfiliado = "123-456789/01"
+        nombre = "Saludify",
+        numeroAfiliado = "0000-000-1234"
     )
 
     var currentUser: Usuario? = null
