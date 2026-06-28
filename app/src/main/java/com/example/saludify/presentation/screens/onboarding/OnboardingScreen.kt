@@ -2,7 +2,6 @@ package com.example.saludify.presentation.screens.onboarding
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,11 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -39,8 +39,6 @@ import com.example.saludify.ui.theme.BrandPrimary
 import com.example.saludify.ui.theme.BrandPrimarySurface
 import com.example.saludify.ui.theme.BrandPrimarySurfaceStrong
 import com.example.saludify.ui.theme.BorderDefault
-import com.example.saludify.ui.theme.SemanticSuccess
-import com.example.saludify.ui.theme.SemanticSuccessSurface
 import com.example.saludify.ui.theme.TextDefault
 import com.example.saludify.ui.theme.TextMuted
 import com.example.saludify.ui.theme.TextPlaceholder
@@ -51,6 +49,7 @@ fun OnboardingScreen(onAfiliadoClick: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .background(BrandPrimarySurfaceStrong)
+            .statusBarsPadding()
             .padding(top = 30.dp, start = 22.dp, end = 22.dp, bottom = 38.dp)
     ) {
         LogoRow()
@@ -77,10 +76,11 @@ fun OnboardingScreen(onAfiliadoClick: () -> Unit) {
         OptionCard(
             iconContainerColor = BrandPrimarySurface,
             iconContent = {
-                Box(
-                    modifier = Modifier
-                        .size(20.dp)
-                        .border(2.5.dp, BrandPrimary, CircleShape)
+                Icon(
+                    imageVector = Icons.Outlined.Person,
+                    contentDescription = null,
+                    tint = BrandPrimary,
+                    modifier = Modifier.size(22.dp)
                 )
             },
             title = "Soy afiliado",
@@ -90,12 +90,12 @@ fun OnboardingScreen(onAfiliadoClick: () -> Unit) {
         )
         Spacer(Modifier.height(13.dp))
         OptionCard(
-            iconContainerColor = SemanticSuccessSurface,
+            iconContainerColor = BrandPrimarySurface,
             iconContent = {
                 Icon(
                     imageVector = Icons.Filled.Add,
                     contentDescription = null,
-                    tint = SemanticSuccess,
+                    tint = BrandPrimary,
                     modifier = Modifier.size(18.dp)
                 )
             },
