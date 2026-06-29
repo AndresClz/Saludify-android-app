@@ -71,11 +71,11 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 
 | # | Pantalla | Estado |
 |---|---|---|
-| 10 | ¿Para quién? | ❌ No existe (no está en el HTML) |
-| 11 | Buscador de especialidad | 🔴 No existe |
-| 12 | Resultados (Turnos / Cartilla) | 🔴 No existe |
-| 13 | Confirmar turno | 🔴 No existe |
-| 14 | Turno confirmado | 🔴 No existe |
+| 10 | ForWhomScreen — ¿Para quién es el turno? | ✅ Implementada |
+| 11 | SearchScreen — Buscador de especialidad | ✅ Implementada |
+| 12 | ResultsScreen — Resultados | ✅ Implementada |
+| 13 | ConfirmScreen — Confirmar turno | ✅ Implementada |
+| 14 | ConfirmedScreen — Turno confirmado | ✅ Implementada |
 
 ---
 
@@ -338,7 +338,7 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
 Flujo 1              [✅][✅][✅][🔴][🔴][🔴][🔴]   3/7 (sin Splash)
-Flujo 2              [🔴][🔴][🔴][🔴]              0/4 (sin frame 10)
+Flujo 2              [✅][✅][✅][✅][✅]           5/5
 ```
 
-> Última actualización: 2026-06-28 (HomeScreen v2)
+> Última actualización: 2026-06-28 (Flujo 2: completo — ResultsScreen + ConfirmScreen + ConfirmedScreen implementadas)

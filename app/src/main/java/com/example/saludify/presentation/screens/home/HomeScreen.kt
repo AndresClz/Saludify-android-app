@@ -2,6 +2,7 @@ package com.example.saludify.presentation.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,7 +72,7 @@ import com.example.saludify.ui.theme.TextPlaceholder
 private val SectionLabelColor = Color(0xFF8896AA)
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(onSacarTurno: () -> Unit = {}) {
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
     val turno = MockData.proximoTurno
 
@@ -85,7 +86,7 @@ fun HomeScreen() {
             ) {
                 CredencialesSection(usuario = usuario)
                 ProximosTurnosSection(turno = turno)
-                AccesosRapidosSection()
+                AccesosRapidosSection(onSacarTurno = onSacarTurno)
                 EmergenciasSection()
                 Spacer(Modifier.height(16.dp))
             }
@@ -552,7 +553,7 @@ private fun ProximosTurnosSection(turno: Turno) {
 // ── Accesos rápidos ───────────────────────────────────────────────────────────
 
 @Composable
-private fun AccesosRapidosSection() {
+private fun AccesosRapidosSection(onSacarTurno: () -> Unit) {
     Column(modifier = Modifier.padding(top = 18.dp)) {
         SectionDivider(title = "ACCESOS RÁPIDOS")
         Spacer(Modifier.height(10.dp))
@@ -566,7 +567,7 @@ private fun AccesosRapidosSection() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                QuickAccessCard(label = "Sacar turno", icon = Icons.Filled.Add, modifier = Modifier.weight(1f))
+                QuickAccessCard(label = "Sacar turno", icon = Icons.Filled.Add, onClick = onSacarTurno, modifier = Modifier.weight(1f))
                 QuickAccessCard(label = "Mis turnos", icon = Icons.Filled.CalendarToday, modifier = Modifier.weight(1f))
             }
             Row(
@@ -584,12 +585,14 @@ private fun AccesosRapidosSection() {
 private fun QuickAccessCard(
     label: String,
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
             .shadow(elevation = 1.dp, shape = SaludifyRadius.card)
             .clip(SaludifyRadius.card)
+            .clickable(onClick = onClick)
             .background(BackgroundSurface)
             .border(1.dp, BorderDefault, SaludifyRadius.card)
             .padding(horizontal = 14.dp, vertical = 12.dp),

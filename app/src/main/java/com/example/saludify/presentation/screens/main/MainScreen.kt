@@ -16,7 +16,7 @@ import com.example.saludify.presentation.screens.procedures.ProceduresScreen
 import androidx.compose.foundation.layout.Box
 
 @Composable
-fun MainScreen() {
+fun MainScreen(onSacarTurno: () -> Unit = {}) {
 
     var selectedScreen by remember {
         mutableStateOf("home")
@@ -43,7 +43,7 @@ fun MainScreen() {
 
             when (selectedScreen) {
 
-                "home" -> HomeScreen()
+                "home" -> HomeScreen(onSacarTurno = onSacarTurno)
 
                 "attention" -> AttentionScreen()
 
