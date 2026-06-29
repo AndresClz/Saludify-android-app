@@ -38,7 +38,7 @@ fun MainScreen() {
     ) { paddingValues ->
 
         Box(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
         ) {
 
             when (selectedScreen) {
