@@ -59,9 +59,9 @@ Cada screen recibe callbacks de navegación por parámetros; ninguna conoce el `
 
 - [x] **`presentation/screens/forwhom/ForWhomScreen.kt`** — Frame 10 completo
 - [x] **`presentation/screens/search/SearchScreen.kt`** — Frame 11 completo
-- [ ] **`presentation/screens/results/ResultsScreen.kt`** — Frame 12
-- [ ] **`presentation/screens/confirm/ConfirmScreen.kt`** — Frame 13
-- [ ] **`presentation/screens/confirmed/ConfirmedScreen.kt`** — Frame 14
+- [x] **`presentation/screens/results/ResultsScreen.kt`** — Frame 12
+- [x] **`presentation/screens/confirm/ConfirmScreen.kt`** — Frame 13
+- [x] **`presentation/screens/confirmed/ConfirmedScreen.kt`** — Frame 14
 
 ---
 

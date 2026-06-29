@@ -6,6 +6,7 @@ data class Medico(
     val especialidad: String,
     val modalidad: String,   // "Presencial" | "Online"
     val lugar: String,
+    val direccion: String = "",
     val diaSemana: String,
     val dia: String,
     val mes: String,

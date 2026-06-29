@@ -20,9 +20,9 @@ object MockData {
     )
 
     val medicos = listOf(
-        Medico(id = 1, nombre = "Dr. Roberto Silva",  especialidad = "Cardiología", modalidad = "Presencial", lugar = "Hospital Central",  diaSemana = "Lun", dia = "23", mes = "Jun", hora = "10:30 hs"),
-        Medico(id = 2, nombre = "Dra. Ana Martínez",  especialidad = "Cardiología", modalidad = "Presencial", lugar = "Sanatorio Güemes",  diaSemana = "Mar", dia = "24", mes = "Jun", hora = "9:00 hs"),
-        Medico(id = 3, nombre = "Dr. Carlos López",   especialidad = "Cardiología", modalidad = "Online",     lugar = "Videoconsulta",     diaSemana = "Lun", dia = "23", mes = "Jun", hora = "11:00 hs")
+        Medico(id = 1, nombre = "Dr. Roberto Silva",  especialidad = "Cardiología", modalidad = "Presencial", lugar = "Hospital Central",  direccion = "Av. Santa Fe 1234", diaSemana = "Lun", dia = "23", mes = "Jun", hora = "10:30 hs"),
+        Medico(id = 2, nombre = "Dra. Ana Martínez",  especialidad = "Cardiología", modalidad = "Presencial", lugar = "Sanatorio Güemes",  direccion = "Córdoba 3456",      diaSemana = "Mar", dia = "24", mes = "Jun", hora = "9:00 hs"),
+        Medico(id = 3, nombre = "Dr. Carlos López",   especialidad = "Cardiología", modalidad = "Online",     lugar = "Videoconsulta",                                      diaSemana = "Lun", dia = "23", mes = "Jun", hora = "11:00 hs")
     )
 
     val especialidades = listOf(

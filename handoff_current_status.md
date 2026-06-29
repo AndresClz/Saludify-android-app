@@ -73,9 +73,9 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 |---|---|---|
 | 10 | ForWhomScreen — ¿Para quién es el turno? | ✅ Implementada |
 | 11 | SearchScreen — Buscador de especialidad | ✅ Implementada |
-| 12 | ResultsScreen — Resultados | 🔴 Stub temporal en NavGraph |
-| 13 | ConfirmScreen — Confirmar turno | 🔴 Stub temporal en NavGraph |
-| 14 | ConfirmedScreen — Turno confirmado | 🔴 Stub temporal en NavGraph |
+| 12 | ResultsScreen — Resultados | ✅ Implementada |
+| 13 | ConfirmScreen — Confirmar turno | ✅ Implementada |
+| 14 | ConfirmedScreen — Turno confirmado | ✅ Implementada |
 
 ---
 
@@ -338,7 +338,7 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
 Flujo 1              [✅][✅][✅][🔴][🔴][🔴][🔴]   3/7 (sin Splash)
-Flujo 2              [✅][✅][🔴][🔴][🔴]           2/5
+Flujo 2              [✅][✅][✅][✅][✅]           5/5
 ```
 
-> Última actualización: 2026-06-28 (Flujo 2: ForWhomScreen + SearchScreen implementadas)
+> Última actualización: 2026-06-28 (Flujo 2: completo — ResultsScreen + ConfirmScreen + ConfirmedScreen implementadas)

@@ -2,21 +2,19 @@ package com.example.saludify.presentation.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+import com.example.saludify.presentation.screens.confirm.ConfirmScreen
+import com.example.saludify.presentation.screens.confirmed.ConfirmedScreen
 import com.example.saludify.presentation.screens.forwhom.ForWhomScreen
 import com.example.saludify.presentation.screens.login.LoginScreen
 import com.example.saludify.presentation.screens.main.MainScreen
 import com.example.saludify.presentation.screens.onboarding.OnboardingScreen
 import com.example.saludify.presentation.screens.profile.ProfileScreen
+import com.example.saludify.presentation.screens.results.ResultsScreen
 import com.example.saludify.presentation.screens.search.SearchScreen
 
 @Composable
@@ -69,23 +67,25 @@ fun NavGraph() {
             )
         }
 
-        // Stubs temporales — se implementan en la próxima iteración
         composable(Routes.Resultados.route) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Resultados — próximamente")
-            }
+            ResultsScreen(
+                onBackClick = { navController.popBackStack() },
+                onReservar  = { navController.navigate(Routes.ConfirmarTurno.route) }
+            )
         }
 
         composable(Routes.ConfirmarTurno.route) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Confirmar turno — próximamente")
-            }
+            ConfirmScreen(
+                onBackClick = { navController.popBackStack() },
+                onConfirmar = { navController.navigate(Routes.TurnoConfirmado.route) }
+            )
         }
 
         composable(Routes.TurnoConfirmado.route) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Turno confirmado — próximamente")
-            }
+            ConfirmedScreen(
+                onVerTurnos    = { navController.popBackStack(Routes.Main.route, inclusive = false) },
+                onVolverInicio = { navController.popBackStack(Routes.Main.route, inclusive = false) }
+            )
         }
     }
 }
