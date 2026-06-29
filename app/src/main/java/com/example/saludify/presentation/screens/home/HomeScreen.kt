@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
@@ -70,7 +71,7 @@ import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
 
 private val SectionLabelColor = Color(0xFF8896AA)
-
+@Preview
 @Composable
 fun HomeScreen(onSacarTurno: () -> Unit = {}) {
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
