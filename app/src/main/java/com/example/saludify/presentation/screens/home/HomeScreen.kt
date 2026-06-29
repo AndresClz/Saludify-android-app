@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,17 +13,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,42 +54,51 @@ import com.example.saludify.ui.theme.BorderDefault
 import com.example.saludify.ui.theme.BorderLight
 import com.example.saludify.ui.theme.BorderMuted
 import com.example.saludify.ui.theme.BrandPrimary
+import com.example.saludify.ui.theme.BrandPrimaryBorder
 import com.example.saludify.ui.theme.BrandPrimaryDark
 import com.example.saludify.ui.theme.BrandPrimaryLight
 import com.example.saludify.ui.theme.BrandPrimarySurface
 import com.example.saludify.ui.theme.SaludifyRadius
-import com.example.saludify.ui.theme.SemanticOrange
-import com.example.saludify.ui.theme.SemanticOrangeSurface
-import com.example.saludify.ui.theme.SemanticPurple
-import com.example.saludify.ui.theme.SemanticPurpleSurface
-import com.example.saludify.ui.theme.SemanticSuccess
-import com.example.saludify.ui.theme.SemanticSuccessSurface
+import com.example.saludify.ui.theme.SemanticDanger
+import com.example.saludify.ui.theme.SemanticDangerBorder
+import com.example.saludify.ui.theme.SemanticDangerSurface
+import com.example.saludify.ui.theme.SemanticDangerSurfaceStrong
 import com.example.saludify.ui.theme.TextDefault
 import com.example.saludify.ui.theme.TextMuted
 import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
-import com.example.saludify.ui.theme.TextSecondary
+
+private val SectionLabelColor = Color(0xFF8896AA)
 
 @Composable
 fun HomeScreen() {
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
     val turno = MockData.proximoTurno
 
-    Column(modifier = Modifier.fillMaxSize().background(BackgroundApp)) {
-        HomeHeader(usuario = usuario)
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(bottom = 16.dp)
-        ) {
-            CredencialesSection(usuario = usuario)
-            TokenSection()
-            ProximosTurnosSection(turno = turno)
-            AccesosRapidosSection()
+    Box(modifier = Modifier.fillMaxSize().background(BackgroundApp)) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            HomeHeader(usuario = usuario)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                CredencialesSection(usuario = usuario)
+                ProximosTurnosSection(turno = turno)
+                AccesosRapidosSection()
+                EmergenciasSection()
+                Spacer(Modifier.height(16.dp))
+            }
         }
+        GeminiFab(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 16.dp)
+        )
     }
 }
+
+// ── Header ──────────────────────────────────────────────────────────────────
 
 @Composable
 private fun HomeHeader(usuario: Usuario) {
@@ -93,17 +106,103 @@ private fun HomeHeader(usuario: Usuario) {
         modifier = Modifier
             .fillMaxWidth()
             .background(BackgroundSurface)
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .statusBarsPadding()
+            .padding(horizontal = 18.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Logo: badge "S" + wordmark
         Row(
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(7.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
                 modifier = Modifier
-                    .size(38.dp)
+                    .size(24.dp)
+                    .background(BrandPrimary, SaludifyRadius.icon),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "S",
+                    color = TextOnPrimary,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    lineHeight = 1.em
+                )
+            }
+            Text(
+                text = "Saludify",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = BrandPrimary,
+                letterSpacing = (-0.3).sp
+            )
+        }
+
+        // Right: Ver token + bell + avatar
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // "Ver token" pill
+            Row(
+                modifier = Modifier
+                    .clip(SaludifyRadius.badge)
+                    .background(BrandPrimarySurface)
+                    .padding(horizontal = 14.dp, vertical = 7.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(SaludifyRadius.full)
+                        .background(BrandPrimary)
+                )
+                Text(
+                    text = "Ver token",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = BrandPrimary
+                )
+            }
+
+            // Bell with red dot
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
+                    .clip(SaludifyRadius.full)
+                    .background(BackgroundSubtle),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Notifications,
+                    contentDescription = null,
+                    tint = TextMuted,
+                    modifier = Modifier.size(18.dp)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(10.dp)
+                        .align(Alignment.TopEnd)
+                        .offset(x = (-1).dp, y = 1.dp)
+                        .clip(SaludifyRadius.full)
+                        .background(BackgroundSurface),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(7.dp)
+                            .clip(SaludifyRadius.full)
+                            .background(Color(0xFFEF4444))
+                    )
+                }
+            }
+
+            // Avatar
+            Box(
+                modifier = Modifier
+                    .size(34.dp)
                     .clip(SaludifyRadius.full)
                     .background(BrandPrimary),
                 contentAlignment = Alignment.Center
@@ -111,55 +210,9 @@ private fun HomeHeader(usuario: Usuario) {
                 Text(
                     text = usuario.nombre.first().toString(),
                     color = TextOnPrimary,
-                    fontSize = 15.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 1.em
-                )
-            }
-            Column {
-                Text(
-                    text = "Buenos días,",
-                    fontSize = 11.sp,
-                    color = TextPlaceholder,
-                    lineHeight = 1.3.em
-                )
-                Text(
-                    text = "${usuario.nombre} ${usuario.apellido}",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = TextDefault,
-                    letterSpacing = (-0.2).sp,
-                    lineHeight = 1.3.em
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .size(38.dp)
-                .clip(SaludifyRadius.full)
-                .background(BackgroundSubtle),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Outlined.Notifications,
-                contentDescription = "Notificaciones",
-                tint = TextMuted,
-                modifier = Modifier.size(20.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .align(Alignment.TopEnd)
-                    .offset(x = (-2).dp, y = 2.dp)
-                    .clip(SaludifyRadius.full)
-                    .background(BackgroundSurface),
-                contentAlignment = Alignment.Center
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .clip(SaludifyRadius.full)
-                        .background(Color(0xFFEF4444))
                 )
             }
         }
@@ -167,43 +220,136 @@ private fun HomeHeader(usuario: Usuario) {
     HorizontalDivider(color = BorderLight, thickness = 1.dp)
 }
 
+// ── Shared: section divider label + line ────────────────────────────────────
+
+@Composable
+private fun SectionDivider(title: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 18.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = title,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = SectionLabelColor,
+            letterSpacing = 0.09.em
+        )
+        HorizontalDivider(modifier = Modifier.weight(1f), color = BorderDefault, thickness = 1.dp)
+    }
+}
+
+// ── Credenciales ─────────────────────────────────────────────────────────────
+
 @Composable
 private fun CredencialesSection(usuario: Usuario) {
-    Column(modifier = Modifier.padding(start = 18.dp, end = 18.dp, top = 20.dp)) {
+    val pagerState = rememberPagerState(pageCount = { 2 })
+
+    Column(modifier = Modifier.padding(top = 20.dp)) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp)
+                .padding(bottom = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Tus credenciales",
-                fontSize = 13.sp,
+                text = "TUS CREDENCIALES",
+                fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                letterSpacing = (-0.1).sp
+                color = SectionLabelColor,
+                letterSpacing = 0.09.em
             )
             Text(text = "Ver todas", fontSize = 12.sp, color = BrandPrimary)
         }
 
-        Spacer(modifier = Modifier.height(14.dp))
+        // HorizontalPager: cada página ocupa el ancho disponible menos el peek derecho
+        HorizontalPager(
+            state = pagerState,
+            contentPadding = PaddingValues(start = 18.dp, end = 44.dp),
+            pageSpacing = 12.dp,
+            modifier = Modifier.fillMaxWidth()
+        ) { page ->
+            when (page) {
+                0 -> CredencialCard(
+                    nombre = "${usuario.nombre} ${usuario.apellido}",
+                    numero = "0000 · 0000 · 1234",
+                    labelTitular = "TITULAR",
+                    modifier = Modifier.fillMaxWidth()
+                )
+                else -> CredencialCard(
+                    nombre = "Lucas González",
+                    numero = "0000 · 0000 · 5678",
+                    labelTitular = "AFILIADO",
+                    isSecondary = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
 
-        Box(
+        // Dots reactivos al pager
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(elevation = 10.dp, shape = SaludifyRadius.panel)
-                .clip(SaludifyRadius.panel)
-                .background(
-                    brush = Brush.linearGradient(
-                        colorStops = arrayOf(
-                            0f to BrandPrimaryDark,
-                            0.52f to BrandPrimary,
-                            1f to BrandPrimaryLight
-                        ),
-                        start = Offset(0f, 0f),
-                        end = Offset(Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY)
-                    )
-                )
+                .padding(top = 11.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Box(
+                modifier = Modifier
+                    .size(width = if (pagerState.currentPage == 0) 20.dp else 5.dp, height = 5.dp)
+                    .clip(SaludifyRadius.badge)
+                    .background(if (pagerState.currentPage == 0) BrandPrimary else BorderMuted)
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+            Box(
+                modifier = Modifier
+                    .size(width = if (pagerState.currentPage == 1) 20.dp else 5.dp, height = 5.dp)
+                    .clip(SaludifyRadius.badge)
+                    .background(if (pagerState.currentPage == 1) BrandPrimary else BorderMuted)
+            )
+        }
+    }
+}
+
+@Composable
+private fun CredencialCard(
+    nombre: String,
+    numero: String,
+    labelTitular: String,
+    modifier: Modifier = Modifier,
+    isSecondary: Boolean = false
+) {
+    val gradientColors = if (isSecondary) {
+        arrayOf(0f to Color(0xFF163872), 0.52f to Color(0xFF1E4FA8), 1f to Color(0xFF2A62C0))
+    } else {
+        arrayOf(0f to BrandPrimaryDark, 0.52f to BrandPrimary, 1f to BrandPrimaryLight)
+    }
+
+    Box(
+        modifier = modifier
+            .then(
+                if (!isSecondary) Modifier.shadow(
+                    elevation = 10.dp,
+                    shape = SaludifyRadius.panel,
+                    spotColor = BrandPrimary.copy(alpha = 0.28f)
+                ) else Modifier
+            )
+            .clip(SaludifyRadius.panel)
+            .background(
+                Brush.linearGradient(
+                    colorStops = gradientColors,
+                    start = Offset.Zero,
+                    end = Offset.Infinite
+                )
+            )
+    ) {
+        // Decorative circles (primary card only)
+        if (!isSecondary) {
             Box(
                 modifier = Modifier
                     .size(140.dp)
@@ -220,318 +366,216 @@ private fun CredencialesSection(usuario: Usuario) {
                     .clip(SaludifyRadius.full)
                     .background(Color.White.copy(alpha = 0.05f))
             )
-            Column(
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 22.dp, vertical = 20.dp)
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 22.dp, vertical = 20.dp)
+                    .padding(bottom = 22.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 22.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Saludify",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextOnPrimary,
-                        letterSpacing = (-0.2).sp
-                    )
-                    Box(
-                        modifier = Modifier
-                            .size(width = 32.dp, height = 22.dp)
-                            .clip(RoundedCornerShape(5.dp))
-                            .background(Color.White.copy(alpha = 0.2f))
-                            .border(1.dp, Color.White.copy(alpha = 0.3f), RoundedCornerShape(5.dp))
-                    )
-                }
                 Text(
-                    text = "0000 · 0000 · 1234",
+                    text = "Saludify",
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = TextOnPrimary,
-                    letterSpacing = 0.2.em,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Column {
-                        Text(
-                            text = "TITULAR",
-                            fontSize = 9.sp,
-                            color = TextOnPrimary.copy(alpha = 0.6f),
-                            letterSpacing = 0.09.em,
-                            modifier = Modifier.padding(bottom = 3.dp)
-                        )
-                        Text(
-                            text = "${usuario.nombre} ${usuario.apellido}",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextOnPrimary
-                        )
-                    }
-                    Column(horizontalAlignment = Alignment.End) {
-                        Text(
-                            text = "PLAN",
-                            fontSize = 9.sp,
-                            color = TextOnPrimary.copy(alpha = 0.6f),
-                            letterSpacing = 0.09.em,
-                            modifier = Modifier.padding(bottom = 3.dp)
-                        )
-                        Text(
-                            text = "Premium",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TextOnPrimary
-                        )
-                    }
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 11.dp),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(width = 20.dp, height = 5.dp)
-                    .clip(SaludifyRadius.badge)
-                    .background(BrandPrimary)
-            )
-            Spacer(modifier = Modifier.width(5.dp))
-            Box(
-                modifier = Modifier
-                    .size(5.dp)
-                    .clip(SaludifyRadius.badge)
-                    .background(BorderMuted)
-            )
-        }
-    }
-}
-
-@Composable
-private fun TokenSection() {
-    Column(modifier = Modifier.padding(start = 18.dp, end = 18.dp, top = 18.dp)) {
-        Text(
-            text = "Token de acceso",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = TextSecondary,
-            letterSpacing = (-0.1).sp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 1.dp, shape = SaludifyRadius.cardLg)
-                .clip(SaludifyRadius.cardLg)
-                .background(BackgroundSurface)
-                .border(1.dp, BorderDefault, SaludifyRadius.cardLg)
-                .padding(horizontal = 20.dp, vertical = 18.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                Text(
-                    text = "842 619",
-                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
-                    color = TextDefault,
-                    letterSpacing = 0.24.em,
-                    lineHeight = 1.1.em
+                    color = TextOnPrimary,
+                    letterSpacing = (-0.2).sp
                 )
-                Row(modifier = Modifier.padding(top = 5.dp)) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 32.dp, height = 22.dp)
+                        .clip(SaludifyRadius.buttonSm)
+                        .background(Color.White.copy(alpha = 0.2f))
+                        .border(1.dp, Color.White.copy(alpha = 0.3f), SaludifyRadius.buttonSm)
+                )
+            }
+            Text(
+                text = numero,
+                fontSize = 15.sp,
+                color = TextOnPrimary,
+                letterSpacing = 0.2.em,
+                modifier = Modifier.padding(bottom = 20.dp)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Column {
                     Text(
-                        text = "Válido por ",
-                        fontSize = 11.sp,
-                        color = TextPlaceholder,
-                        lineHeight = 1.4.em
+                        text = labelTitular,
+                        fontSize = 9.sp,
+                        color = TextOnPrimary.copy(alpha = 0.6f),
+                        letterSpacing = 0.09.em,
+                        modifier = Modifier.padding(bottom = 3.dp)
                     )
                     Text(
-                        text = "23:47 hs",
-                        fontSize = 11.sp,
+                        text = nombre,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = TextSecondary,
-                        lineHeight = 1.4.em
-                    )
-                    Text(
-                        text = " · Tocá para copiar",
-                        fontSize = 11.sp,
-                        color = TextPlaceholder,
-                        lineHeight = 1.4.em
+                        color = TextOnPrimary
                     )
                 }
-            }
-            Box(
-                modifier = Modifier
-                    .size(42.dp)
-                    .clip(SaludifyRadius.iconLg)
-                    .background(BrandPrimarySurface),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Refresh,
-                    contentDescription = "Refrescar token",
-                    tint = BrandPrimary,
-                    modifier = Modifier.size(20.dp)
-                )
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = "PLAN",
+                        fontSize = 9.sp,
+                        color = TextOnPrimary.copy(alpha = 0.6f),
+                        letterSpacing = 0.09.em,
+                        modifier = Modifier.padding(bottom = 3.dp)
+                    )
+                    Text(
+                        text = "Premium",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextOnPrimary
+                    )
+                }
             }
         }
     }
 }
+
+// ── Próximo turno ─────────────────────────────────────────────────────────────
 
 @Composable
 private fun ProximosTurnosSection(turno: Turno) {
-    Column(modifier = Modifier.padding(start = 18.dp, end = 18.dp, top = 18.dp)) {
-        Row(
+    Column(modifier = Modifier.padding(top = 18.dp)) {
+        SectionDivider(title = "PRÓXIMO TURNO")
+        Spacer(Modifier.height(10.dp))
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Próximos turnos",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                letterSpacing = (-0.1).sp
-            )
-            Text(text = "Ver todos", fontSize = 12.sp, color = BrandPrimary)
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .shadow(elevation = 1.dp, shape = SaludifyRadius.cardLg)
+                .padding(horizontal = 18.dp)
+                .shadow(
+                    elevation = 2.dp,
+                    shape = SaludifyRadius.cardLg,
+                    spotColor = BrandPrimary.copy(alpha = 0.10f)
+                )
                 .clip(SaludifyRadius.cardLg)
                 .background(BackgroundSurface)
-                .border(1.dp, BorderDefault, SaludifyRadius.cardLg)
-                .padding(horizontal = 18.dp, vertical = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            verticalAlignment = Alignment.Top
+                .border(1.5.dp, BrandPrimaryBorder, SaludifyRadius.cardLg)
         ) {
-            Column(
+            // Blue header bar
+            Row(
                 modifier = Modifier
-                    .width(46.dp)
-                    .clip(SaludifyRadius.iconLg)
-                    .background(BrandPrimarySurface)
-                    .padding(vertical = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth()
+                    .background(BrandPrimary)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(7.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(6.dp)
+                            .clip(SaludifyRadius.full)
+                            .background(Color(0xFF4ADE80))
+                    )
+                    Text(
+                        text = "${turno.diaSemana} ${turno.dia} ${turno.mes} · ${turno.hora}",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TextOnPrimary
+                    )
+                }
                 Text(
-                    text = turno.mes,
-                    fontSize = 9.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = BrandPrimary,
-                    letterSpacing = 0.05.em,
-                    lineHeight = 1.em
-                )
-                Text(
-                    text = turno.dia,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = BrandPrimary,
-                    lineHeight = 1.1.em
+                    text = "en 2 días",
+                    fontSize = 11.sp,
+                    color = TextOnPrimary.copy(alpha = 0.65f)
                 )
             }
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = turno.medico,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TextDefault,
-                    modifier = Modifier.padding(bottom = 2.dp)
-                )
-                Text(
-                    text = turno.especialidad,
-                    fontSize = 12.sp,
-                    color = TextMuted,
-                    modifier = Modifier.padding(bottom = 10.dp)
-                )
-                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    TurnoChip(text = "${turno.diaSemana} · ${turno.hora}")
-                    TurnoChip(text = turno.lugar)
+            // Body
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(42.dp)
+                        .clip(SaludifyRadius.full)
+                        .background(BrandPrimarySurface),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "RS",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandPrimary,
+                        lineHeight = 1.em
+                    )
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = turno.medico,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = TextDefault,
+                        letterSpacing = (-0.2).sp,
+                        modifier = Modifier.padding(bottom = 2.dp)
+                    )
+                    Text(
+                        text = "${turno.especialidad} · ${turno.lugar}",
+                        fontSize = 12.sp,
+                        color = TextMuted
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .clip(SaludifyRadius.badge)
+                        .background(BrandPrimarySurface)
+                        .padding(horizontal = 12.dp, vertical = 5.dp)
+                ) {
+                    Text(
+                        text = "Detalle",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = BrandPrimary
+                    )
                 }
             }
         }
     }
 }
 
-@Composable
-private fun TurnoChip(text: String) {
-    Box(
-        modifier = Modifier
-            .clip(SaludifyRadius.badge)
-            .background(BackgroundSubtle)
-            .padding(horizontal = 10.dp, vertical = 4.dp)
-    ) {
-        Text(
-            text = text,
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Medium,
-            color = TextSecondary
-        )
-    }
-}
+// ── Accesos rápidos ───────────────────────────────────────────────────────────
 
 @Composable
 private fun AccesosRapidosSection() {
-    Column(modifier = Modifier.padding(start = 18.dp, end = 18.dp, top = 18.dp)) {
-        Text(
-            text = "Accesos rápidos",
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = TextSecondary,
-            letterSpacing = (-0.1).sp,
-            modifier = Modifier.padding(bottom = 12.dp)
-        )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+    Column(modifier = Modifier.padding(top = 18.dp)) {
+        SectionDivider(title = "ACCESOS RÁPIDOS")
+        Spacer(Modifier.height(10.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            QuickAccessCard(
-                label = "Sacar turno",
-                icon = Icons.Filled.Add,
-                iconBackground = BrandPrimarySurface,
-                iconTint = BrandPrimary,
-                modifier = Modifier.weight(1f)
-            )
-            QuickAccessCard(
-                label = "Mis turnos",
-                icon = Icons.Filled.CalendarToday,
-                iconBackground = SemanticOrangeSurface,
-                iconTint = SemanticOrange,
-                modifier = Modifier.weight(1f)
-            )
-        }
-        Spacer(modifier = Modifier.height(12.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            QuickAccessCard(
-                label = "Reintegros",
-                icon = Icons.Filled.ArrowDownward,
-                iconBackground = SemanticSuccessSurface,
-                iconTint = SemanticSuccess,
-                modifier = Modifier.weight(1f)
-            )
-            QuickAccessCard(
-                label = "Cartilla",
-                icon = Icons.Filled.Apps,
-                iconBackground = SemanticPurpleSurface,
-                iconTint = SemanticPurple,
-                modifier = Modifier.weight(1f)
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                QuickAccessCard(label = "Sacar turno", icon = Icons.Filled.Add, modifier = Modifier.weight(1f))
+                QuickAccessCard(label = "Mis turnos", icon = Icons.Filled.CalendarToday, modifier = Modifier.weight(1f))
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                QuickAccessCard(label = "Reintegros", icon = Icons.Filled.ArrowDownward, modifier = Modifier.weight(1f))
+                QuickAccessCard(label = "Cartilla", icon = Icons.Filled.Apps, modifier = Modifier.weight(1f))
+            }
         }
     }
 }
@@ -540,39 +584,135 @@ private fun AccesosRapidosSection() {
 private fun QuickAccessCard(
     label: String,
     icon: ImageVector,
-    iconBackground: Color,
-    iconTint: Color,
     modifier: Modifier = Modifier
 ) {
-    Column(
+    Row(
         modifier = modifier
-            .shadow(elevation = 1.dp, shape = SaludifyRadius.cardLg)
-            .clip(SaludifyRadius.cardLg)
+            .shadow(elevation = 1.dp, shape = SaludifyRadius.card)
+            .clip(SaludifyRadius.card)
             .background(BackgroundSurface)
-            .border(1.dp, BorderDefault, SaludifyRadius.cardLg)
-            .padding(18.dp)
+            .border(1.dp, BorderDefault, SaludifyRadius.card)
+            .padding(horizontal = 14.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .size(40.dp)
-                .clip(RoundedCornerShape(12.dp))
-                .background(iconBackground),
+                .size(34.dp)
+                .clip(SaludifyRadius.chip)
+                .background(BrandPrimarySurface),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
-                tint = iconTint,
-                modifier = Modifier.size(20.dp)
+                tint = BrandPrimary,
+                modifier = Modifier.size(18.dp)
             )
         }
-        Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = label,
             fontSize = 13.sp,
             fontWeight = FontWeight.SemiBold,
             color = TextDefault,
             lineHeight = 1.3.em
+        )
+    }
+}
+
+// ── Emergencias ───────────────────────────────────────────────────────────────
+
+@Composable
+private fun EmergenciasSection() {
+    Column(modifier = Modifier.padding(top = 14.dp)) {
+        SectionDivider(title = "EMERGENCIAS")
+        Spacer(Modifier.height(10.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp)
+                .clip(SaludifyRadius.iconLg)
+                .background(SemanticDangerSurface)
+                .border(1.dp, SemanticDangerBorder, SaludifyRadius.iconLg)
+                .padding(horizontal = 14.dp, vertical = 11.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(SaludifyRadius.iconMd)
+                    .background(SemanticDangerSurfaceStrong),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Phone,
+                    contentDescription = null,
+                    tint = SemanticDanger,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = "Línea de emergencias",
+                    fontSize = 11.sp,
+                    color = TextPlaceholder,
+                    modifier = Modifier.padding(bottom = 1.dp)
+                )
+                Text(
+                    text = "0800 333 4444",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = SemanticDanger,
+                    letterSpacing = (-0.1).sp
+                )
+            }
+            Box(
+                modifier = Modifier
+                    .clip(SaludifyRadius.badge)
+                    .background(SemanticDanger)
+                    .padding(horizontal = 14.dp, vertical = 8.dp)
+            ) {
+                Text(
+                    text = "Llamar",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TextOnPrimary
+                )
+            }
+        }
+    }
+}
+
+// ── FAB Gemini ────────────────────────────────────────────────────────────────
+
+@Composable
+private fun GeminiFab(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(52.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = SaludifyRadius.full,
+                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
+            )
+            .clip(SaludifyRadius.full)
+            .background(
+                Brush.linearGradient(
+                    colorStops = arrayOf(
+                        0f to Color(0xFF4285F4),
+                        0.55f to Color(0xFF7C3AED),
+                        1f to Color(0xFFDB2777)
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.AutoAwesome,
+            contentDescription = "Chat IA",
+            tint = TextOnPrimary,
+            modifier = Modifier.size(22.dp)
         )
     }
 }

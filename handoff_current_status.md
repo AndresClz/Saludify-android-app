@@ -61,7 +61,7 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 | 01 | SplashScreen | ❌ No existe | Prioridad baja |
 | 02 | OnboardingScreen | ✅ Implementada | Ícono "Soy afiliado" → `Icons.Outlined.Person`; ambas cards usan `BrandPrimarySurface`; `statusBarsPadding()` aplicado |
 | 03 | LoginScreen | ✅ Implementada | DNI + contraseña; `statusBarsPadding()` aplicado |
-| 05 | HomeScreen | ✅ Implementada | Header + credencial + token + próximo turno + grid 2×2 |
+| 05 | HomeScreen | ✅ Implementada (rediseño v2) | Ver detalle de secciones abajo |
 | 06 | AttentionScreen | 🔴 Stub | Hero gradiente + lista 5 items + FAB Gemini |
 | 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items + FAB Gemini |
 | 08 | ProfileScreen | 🔴 Stub | Hero gradiente + menú + cerrar sesión + FAB Gemini |
@@ -93,6 +93,23 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 **Nota `Type.kt`:** requiere `@file:OptIn(ExperimentalTextApi::class)`. Cada peso usa `FontVariation.Settings(FontVariation.weight(N))` para forzar el eje `wght` explícitamente — sin esto el OS renderiza todo en Regular (defecto del archivo).
 
 **Credenciales mock:** DNI `12345678` / contraseña `1234` → usuario "María González".
+
+---
+
+## HomeScreen v2 — detalle de cambios respecto al HTML actualizado
+
+| Sección | Implementación |
+|---|---|
+| Header | Logo badge "S" 24dp + "Saludify" 14sp Bold · derecha: pill "Ver token" + bell 34dp + avatar 34dp · `statusBarsPadding()` en el Row |
+| Credenciales | `HorizontalPager` (2 páginas) con `contentPadding(start=18,end=44)` y `pageSpacing=12` — peek nativo · dots reactivos a `pagerState.currentPage` |
+| Próximo turno | Barra header `BrandPrimary` + dot verde `#4ADE80` + "en 2 días" · body: avatar "RS" 42dp + doctor info + pill "Detalle" · borde `BrandPrimaryBorder` |
+| Accesos rápidos | Cards horizontales (Row), todos `BrandPrimarySurface`/`BrandPrimary`, gap 8dp, radius `SaludifyRadius.card` (14dp) |
+| Emergencias | Sección nueva: card `SemanticDangerSurface` + "0800 333 4444" + botón "Llamar" |
+| FAB Gemini | `GeminiFab` overlay `Alignment.BottomEnd`, gradiente `#4285F4→#7C3AED→#DB2777`, `Icons.Filled.AutoAwesome` |
+| Token | Eliminado del body; accesible vía pill "Ver token" en header |
+| Safe area | `MainScreen` aplica solo `calculateBottomPadding()` del Scaffold; cada screen maneja su propio top inset con `statusBarsPadding()` |
+
+**Convención para tabs futuras (06, 07, 08, 09):** el header sticky de cada pantalla debe incluir `.statusBarsPadding()` antes del padding de contenido, igual que `HomeHeader`.
 
 ---
 
@@ -324,4 +341,4 @@ Flujo 1              [✅][✅][✅][🔴][🔴][🔴][🔴]   3/7 (sin Splash)
 Flujo 2              [🔴][🔴][🔴][🔴]              0/4 (sin frame 10)
 ```
 
-> Última actualización: 2026-06-28
+> Última actualización: 2026-06-28 (HomeScreen v2)
