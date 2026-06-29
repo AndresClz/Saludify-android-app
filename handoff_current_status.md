@@ -65,7 +65,7 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 | 06 | AttentionScreen | 🔴 Stub | Hero gradiente + lista 5 items + FAB Gemini |
 | 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items + FAB Gemini |
 | 08 | ProfileScreen | 🔴 Stub | Hero gradiente + menú + cerrar sesión + FAB Gemini |
-| 09 | HelpScreen | 🔴 Stub | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales |
+| 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales; botones "Llamar" y "Cómo llegar" funcionales |
 
 ### Flujo 2 — Sacar Turno
 
@@ -73,7 +73,7 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 |---|---|---|
 | 10 | ForWhomScreen — ¿Para quién es el turno? | ✅ Implementada |
 | 11 | SearchScreen — Buscador de especialidad | ✅ Implementada |
-| 12 | ResultsScreen — Resultados | ✅ Implementada |
+| 12 | ResultsScreen — Resultados (tab Turnos + tab Cartilla) | ✅ Implementada |
 | 13 | ConfirmScreen — Confirmar turno | ✅ Implementada |
 | 14 | ConfirmedScreen — Turno confirmado | ✅ Implementada |
 
@@ -337,8 +337,8 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
-Flujo 1              [✅][✅][✅][🔴][🔴][🔴][🔴]   3/7 (sin Splash)
+Flujo 1              [✅][✅][✅][🔴][🔴][🔴][✅]   4/7 (sin Splash)
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
 ```
 
-> Última actualización: 2026-06-28 (Flujo 2: completo — ResultsScreen + ConfirmScreen + ConfirmedScreen implementadas)
+> Última actualización: 2026-06-28 (HelpScreen ✅ completa con frame 09 + 09b; Flujo 1: 4/7)

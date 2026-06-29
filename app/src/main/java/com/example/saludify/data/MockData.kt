@@ -1,9 +1,12 @@
 package com.example.saludify.data
 
+import com.example.saludify.domain.model.ContactoTelefono
 import com.example.saludify.domain.model.Especialidad
+import com.example.saludify.domain.model.FaqItem
 import com.example.saludify.domain.model.Medico
 import com.example.saludify.domain.model.MedicoCartilla
 import com.example.saludify.domain.model.ObraSocial
+import com.example.saludify.domain.model.Sucursal
 import com.example.saludify.domain.model.Turno
 import com.example.saludify.domain.model.Usuario
 
@@ -76,6 +79,82 @@ object MockData {
         id = 1,
         nombre = "Saludify",
         numeroAfiliado = "0000-000-1234"
+    )
+
+    val faqItems = listOf(
+        FaqItem(
+            pregunta = "¿Cómo saco un turno médico?",
+            respuesta = "Andá a Atención → Sacar turno, elegí especialidad, médico y horario. Recibirás confirmación por notificación push."
+        ),
+        FaqItem(
+            pregunta = "¿Cómo pido una autorización?",
+            respuesta = "Desde Trámites → Autorizaciones podés solicitar autorizaciones médicas. El tiempo de respuesta es de 24 a 72 hs hábiles."
+        ),
+        FaqItem(
+            pregunta = "¿Qué cubre mi plan Premium?",
+            respuesta = "El plan Premium incluye consultas médicas, estudios de laboratorio, imágenes, internaciones y medicamentos con cobertura del 80%."
+        ),
+        FaqItem(
+            pregunta = "¿Cómo cargo un reintegro?",
+            respuesta = "Ingresá a Trámites → Reintegros, adjuntá la factura y comprobante de pago. El reintegro se acredita en 15 días hábiles."
+        )
+    )
+
+    val telefonos = listOf(
+        ContactoTelefono(
+            label = "Urgencias 24 hs",
+            numero = "0800 333 4444",
+            badgeText = "Llamada sin cargo",
+            esUrgencias = true
+        ),
+        ContactoTelefono(
+            label = "Atención al afiliado",
+            numero = "0800 222 7777",
+            badgeText = "Lun–Vie 8–20",
+            esUrgencias = false
+        )
+    )
+
+    val sucursales = listOf(
+        Sucursal(
+            nombre = "Sucursal Centro",
+            direccion = "Av. Corrientes 1234, piso 2",
+            ciudad = "Buenos Aires, CABA",
+            horario = "Lun–Vie 8:00–18:00",
+            telefono = "01145678900",
+            distanciaTexto = "0.8 km",
+            tiempoEstimado = "~10 min caminando",
+            estaAbierto = true,
+            statusLabel = "Abierto ahora",
+            horarioApertura = null,
+            esMasCercana = true
+        ),
+        Sucursal(
+            nombre = "Sucursal Palermo",
+            direccion = "Thames 1880, planta baja",
+            ciudad = "Buenos Aires, CABA",
+            horario = "Lun–Sáb 9:00–17:00",
+            telefono = "01145679100",
+            distanciaTexto = "2.3 km",
+            tiempoEstimado = "~28 min caminando",
+            estaAbierto = true,
+            statusLabel = "Abierto ahora",
+            horarioApertura = null,
+            esMasCercana = false
+        ),
+        Sucursal(
+            nombre = "Sucursal Belgrano",
+            direccion = "Av. Cabildo 2150, local 4",
+            ciudad = "Buenos Aires, CABA",
+            horario = "Lun–Vie 9:00–18:00",
+            telefono = "01145679200",
+            distanciaTexto = "4.1 km",
+            tiempoEstimado = "~12 min en auto",
+            estaAbierto = false,
+            statusLabel = "Cerrado ahora",
+            horarioApertura = "Abre lunes 8:00",
+            esMasCercana = false
+        )
     )
 
     var currentUser: Usuario? = null
