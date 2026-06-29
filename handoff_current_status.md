@@ -62,9 +62,9 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 | 02 | OnboardingScreen | ✅ Implementada | Ícono "Soy afiliado" → `Icons.Outlined.Person`; ambas cards usan `BrandPrimarySurface`; `statusBarsPadding()` aplicado |
 | 03 | LoginScreen | ✅ Implementada | DNI + contraseña; `statusBarsPadding()` aplicado |
 | 05 | HomeScreen | ✅ Implementada (rediseño v2) | Ver detalle de secciones abajo |
-| 06 | AttentionScreen | 🔴 Stub | Hero gradiente + lista 5 items + FAB Gemini |
+| 06 | AttentionScreen | 🟡 PR #5 abierto | Hero gradiente + lista 5 items + FAB Gemini |
 | 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items + FAB Gemini |
-| 08 | ProfileScreen | 🔴 Stub | Hero gradiente + menú + cerrar sesión + FAB Gemini |
+| 08 | ProfileScreen | 🟡 PR #6 abierto | Hero gradiente + menú + cerrar sesión + FAB Gemini |
 | 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales; botones "Llamar" y "Cómo llegar" funcionales |
 
 ### Flujo 2 — Sacar Turno
@@ -337,8 +337,8 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
-Flujo 1              [✅][✅][✅][🔴][🔴][🔴][✅]   4/7 (sin Splash)
+Flujo 1              [✅][✅][✅][🟡][🔴][🟡][✅]   4/7 mergeadas · 2 en PR (sin Splash)
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
 ```
 
-> Última actualización: 2026-06-28 (HelpScreen ✅ completa con frame 09 + 09b; Flujo 1: 4/7)
+> Última actualización: 2026-06-29 (HelpScreen mergeada a main; PR #5 AttentionScreen + PR #6 ProfileScreen abiertos por compañeros)
