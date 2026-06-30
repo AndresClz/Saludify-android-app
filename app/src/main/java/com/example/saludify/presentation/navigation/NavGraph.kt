@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
+import com.example.saludify.presentation.screens.confirmed.ConfirmedScreen
 import com.example.saludify.presentation.screens.login.LoginScreen
 import com.example.saludify.presentation.screens.main.MainScreen
 import com.example.saludify.presentation.screens.onboarding.OnboardingScreen
@@ -51,7 +52,21 @@ fun NavGraph() {
         // Flujo 2 — Sacar Turno
         composable(Routes.SacarTurno.route) {
             SacarTurnoScreen(
-                onVolverAlMain = { navController.popBackStack(Routes.Main.route, inclusive = false) }
+                onVolverAlMain = { navController.popBackStack(Routes.Main.route, inclusive = false) },
+                onConfirmado   = { navController.navigate(Routes.TurnoConfirmado.route) }
+            )
+        }
+
+        composable(
+            route = Routes.TurnoConfirmado.route,
+            enterTransition    = { fadeIn(tween(300)) },
+            exitTransition     = { fadeOut(tween(200)) },
+            popEnterTransition = { fadeIn(tween(300)) },
+            popExitTransition  = { fadeOut(tween(200)) }
+        ) {
+            ConfirmedScreen(
+                onVerTurnos    = { navController.popBackStack(Routes.Main.route, inclusive = false) },
+                onVolverInicio = { navController.popBackStack(Routes.Main.route, inclusive = false) }
             )
         }
     }

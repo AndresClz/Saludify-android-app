@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.saludify.data.MockData
 import com.example.saludify.presentation.screens.confirm.ConfirmScreen
-import com.example.saludify.presentation.screens.confirmed.ConfirmedScreen
 import com.example.saludify.presentation.screens.forwhom.ForWhomScreen
 import com.example.saludify.presentation.screens.results.ResultsScreen
 import com.example.saludify.presentation.screens.search.SearchScreen
@@ -58,11 +57,13 @@ import com.example.saludify.ui.theme.TextSecondary
 private val StepperEmpty = Color(0xFFE5E7EB)
 
 @Composable
-fun SacarTurnoScreen(onVolverAlMain: () -> Unit) {
+fun SacarTurnoScreen(
+    onVolverAlMain: () -> Unit,
+    onConfirmado: () -> Unit
+) {
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
     var step by remember { mutableIntStateOf(0) }
 
-    // Intercepta back para retroceder pasos; en step 0 y step 4 deja que NavController lo maneje
     BackHandler(enabled = step in 1..3) { step-- }
 
     Column(
@@ -70,13 +71,11 @@ fun SacarTurnoScreen(onVolverAlMain: () -> Unit) {
             .fillMaxSize()
             .background(BackgroundApp)
     ) {
-        if (step < 4) {
-            SacarTurnoHeader(
-                step = step,
-                nombreUsuario = "${usuario.nombre} ${usuario.apellido}",
-                onBackClick = { if (step > 0) step-- else onVolverAlMain() }
-            )
-        }
+        SacarTurnoHeader(
+            step = step,
+            nombreUsuario = "${usuario.nombre} ${usuario.apellido}",
+            onBackClick = { if (step > 0) step-- else onVolverAlMain() }
+        )
 
         AnimatedContent(
             targetState = step,
@@ -91,11 +90,7 @@ fun SacarTurnoScreen(onVolverAlMain: () -> Unit) {
                 0 -> ForWhomScreen(onContinuar = { step++ })
                 1 -> SearchScreen(onNext = { step++ })
                 2 -> ResultsScreen(onReservar = { step++ })
-                3 -> ConfirmScreen(onConfirmar = { step++ })
-                4 -> ConfirmedScreen(
-                    onVerTurnos = onVolverAlMain,
-                    onVolverInicio = onVolverAlMain
-                )
+                3 -> ConfirmScreen(onConfirmar = onConfirmado)
             }
         }
     }
