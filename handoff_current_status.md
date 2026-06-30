@@ -349,7 +349,7 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ---
 
-## Branch activo: `feature/animations`
+## Branch activo: `feature/animations` — PR #7 abierto → main
 
 Commits en el branch (sobre `main`):
 1. `feat: animación direccional al cambiar tabs del BottomBar` — MainScreen.kt
@@ -357,8 +357,22 @@ Commits en el branch (sobre `main`):
 3. `feat: animación direccional en segmented control de Ayuda` — HelpScreen.kt
 4. `feat: animación direccional en segmented control de Resultados` — ResultsScreen.kt
 5. `fix: extraer TurnoConfirmado del AnimatedContent al NavGraph` — bugfix layout shift
+6. `fix: agregar imports faltantes de fadeIn, fadeOut y tween en NavGraph` — compile error resuelto
+7. `feat: FAB de IA draggable y centralizado en MainScreen` — `components/GeminiFab.kt` nuevo; eliminado de HomeScreen, AttentionScreen, ProfileScreen, HelpScreen
+8. `feat: snap al borde más cercano al soltar el FAB` — spring animation al edge izquierdo/derecho
+9. `fix: highlight visible en QuickAccessCard al presionar` — `pointerInput + detectTapGestures + animateColorAsState`; sustituye `clickable` que no disparaba dentro de `verticalScroll`
 
-**⚠️ Error de compilación pendiente en `NavGraph.kt`:** faltan imports de `fadeIn`, `fadeOut` y `tween` — los usa para las transiciones de `TurnoConfirmado` pero no están importados. Fix trivial: agregar los 3 imports de `androidx.compose.animation`.
+**Estado del branch:** compila sin errores, PR #7 abierto y actualizado.
+
+---
+
+## FAB Gemini — arquitectura actual
+
+- Vive en `presentation/components/GeminiFab.kt` como `DraggableGeminiFab()`
+- Se instancia una sola vez en `MainScreen`, fuera del `AnimatedContent` de tabs
+- Posición inicial: bottom-end con margen 16dp
+- Al soltar: snap animado con spring al borde izquierdo o derecho más cercano
+- Ausente automáticamente en el flujo Sacar Turno (rutas separadas del NavGraph)
 
 ---
 
@@ -368,7 +382,7 @@ Commits en el branch (sobre `main`):
 Sistema de diseño    [✅][✅][✅][✅]              4/4
 Flujo 1              [✅][✅][✅][✅][🔴][✅][✅]   6/7 mergeadas · 1 stub (sin Splash)
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
-Animaciones          [✅][✅][✅][✅][✅]           5/5 commits · 1 compile error pendiente
+Animaciones          [✅][✅][✅][✅][✅][✅][✅]   7/7 · sin errores pendientes
 ```
 
-> Última actualización: 2026-06-29 (feature/animations con animaciones de tabs, segmented controls y flujo Sacar Turno; **ProceduresScreen es la única pantalla de contenido pendiente**)
+> Última actualización: 2026-06-29 (PR #7 abierto: animaciones de navegación, FAB draggable con snap, highlight en QuickAccessCard; **ProceduresScreen es la única pantalla de contenido pendiente**)
