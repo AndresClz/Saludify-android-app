@@ -13,9 +13,6 @@ sealed class Routes(val route: String) {
     object Profile : Routes("profile")
 
     // Flujo 2 — Sacar Turno
-    object ParaQuien       : Routes("para_quien")
-    object Buscar          : Routes("buscar")
-    object Resultados      : Routes("resultados")
-    object ConfirmarTurno  : Routes("confirmar_turno")
+    object SacarTurno      : Routes("sacar_turno")
     object TurnoConfirmado : Routes("turno_confirmado")
 }

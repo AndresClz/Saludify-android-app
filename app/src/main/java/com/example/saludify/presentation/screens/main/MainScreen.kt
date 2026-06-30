@@ -1,5 +1,12 @@
 package com.example.saludify.presentation.screens.main
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
@@ -7,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 import com.example.saludify.presentation.components.BottomBar
+import com.example.saludify.presentation.components.DraggableGeminiFab
 
 import com.example.saludify.presentation.screens.home.HomeScreen
 import com.example.saludify.presentation.screens.profile.ProfileScreen
@@ -41,18 +49,33 @@ fun MainScreen(onSacarTurno: () -> Unit = {}) {
             modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
         ) {
 
-            when (selectedScreen) {
+            val tabOrder = listOf("home", "attention", "procedures", "help", "profile")
 
-                "home" -> HomeScreen(onSacarTurno = onSacarTurno)
+            AnimatedContent(
+                targetState = selectedScreen,
+                transitionSpec = {
+                    val dir = if (tabOrder.indexOf(targetState) > tabOrder.indexOf(initialState)) 1 else -1
+                    slideInHorizontally(tween(280)) { dir * it } + fadeIn(tween(280)) togetherWith
+                    slideOutHorizontally(tween(280)) { -dir * it } + fadeOut(tween(200))
+                },
+                label = "tab"
+            ) { screen ->
 
-                "attention" -> AttentionScreen()
+                when (screen) {
 
-                "procedures" -> ProceduresScreen()
+                    "home" -> HomeScreen(onSacarTurno = onSacarTurno)
 
-                "help" -> HelpScreen()
+                    "attention" -> AttentionScreen()
 
-                "profile" -> ProfileScreen()
+                    "procedures" -> ProceduresScreen()
+
+                    "help" -> HelpScreen()
+
+                    "profile" -> ProfileScreen()
+                }
             }
+
+            DraggableGeminiFab()
         }
     }
     }

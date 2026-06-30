@@ -55,7 +55,6 @@ import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
 import com.example.saludify.ui.theme.TextSecondary
 
-private val StepperEmpty      = Color(0xFFE5E7EB)
 private val StarEmpty         = Color(0xFFE5E7EB)
 private val DetallesDivider   = Color(0xFFF3F4F6)
 private val TipoChipShape     = RoundedCornerShape(13.dp)
@@ -75,15 +74,12 @@ private fun mesLabel(m: String) = when (m) {
 
 @Composable
 fun ConfirmScreen(
-    onBackClick: () -> Unit,
     onConfirmar: () -> Unit
 ) {
     val medico  = MockData.medicos.first()
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
 
     Column(modifier = Modifier.fillMaxSize().background(BackgroundApp)) {
-        ConfirmHeader(onBackClick = onBackClick)
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -147,70 +143,6 @@ fun ConfirmScreen(
                     .padding(vertical = 4.dp)
             )
         }
-    }
-}
-
-// ── Header ─────────────────────────────────────────────────────────────────────
-
-@Composable
-private fun ConfirmHeader(onBackClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BackgroundSurface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(SaludifyRadius.full)
-                    .clickable(onClick = onBackClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = TextDefault,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Text(
-                text = "Confirmar turno",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.size(28.dp))
-        }
-
-        // Stepper: 4/4 llenos
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp)
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            repeat(4) {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(3.dp)
-                        .clip(SaludifyRadius.badge)
-                        .background(BrandPrimary)
-                )
-            }
-        }
-
-        HorizontalDivider(color = BorderLight, thickness = 1.dp)
     }
 }
 

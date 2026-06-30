@@ -1,5 +1,12 @@
 package com.example.saludify.presentation.screens.results
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -67,21 +74,17 @@ import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
 import com.example.saludify.ui.theme.TextSecondary
 
-private val StepperEmpty          = Color(0xFFE5E7EB)
 private val BadgeGrayBg           = Color(0xFFD1D5DB)
 private val WarningTextDark       = Color(0xFF92400E)
 private val CartillaBorderSuccess = Color(0xFFBBF7D0)
 
 @Composable
 fun ResultsScreen(
-    onBackClick: () -> Unit,
     onReservar: () -> Unit
 ) {
     var selectedTab by remember { mutableIntStateOf(0) }
 
     Column(modifier = Modifier.fillMaxSize().background(BackgroundApp)) {
-        ResultsHeader(onBackClick = onBackClick)
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -94,93 +97,24 @@ fun ResultsScreen(
                 )
             }
 
-            if (selectedTab == 0) {
-                TurnosContent(onReservar = onReservar)
-            } else {
-                CartillaContent()
+            AnimatedContent(
+                targetState = selectedTab,
+                transitionSpec = {
+                    val dir = if (targetState > initialState) 1 else -1
+                    slideInHorizontally(tween(260)) { dir * it } + fadeIn(tween(260)) togetherWith
+                    slideOutHorizontally(tween(260)) { -dir * it } + fadeOut(tween(180))
+                },
+                label = "results_tab"
+            ) { tab ->
+                if (tab == 0) {
+                    TurnosContent(onReservar = onReservar)
+                } else {
+                    CartillaContent()
+                }
             }
 
             Spacer(Modifier.height(16.dp))
         }
-    }
-}
-
-// ── Header ─────────────────────────────────────────────────────────────────────
-
-@Composable
-private fun ResultsHeader(onBackClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BackgroundSurface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(SaludifyRadius.full)
-                    .clickable(onClick = onBackClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = TextDefault,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Text(
-                text = "Resultados",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f)
-            )
-            // Ícono filtro — 3 líneas de ancho decreciente
-            Column(
-                modifier = Modifier.size(28.dp),
-                verticalArrangement = Arrangement.spacedBy(2.5.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.End
-            ) {
-                listOf(16.dp, 11.dp, 7.dp).forEach { lineWidth ->
-                    Box(
-                        modifier = Modifier
-                            .width(lineWidth)
-                            .height(2.dp)
-                            .clip(SaludifyRadius.badge)
-                            .background(TextSecondary)
-                    )
-                }
-            }
-        }
-
-        // Stepper: 3/4 llenos
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp)
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            repeat(4) { index ->
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(3.dp)
-                        .clip(SaludifyRadius.badge)
-                        .background(if (index < 3) BrandPrimary else StepperEmpty)
-                )
-            }
-        }
-
-        HorizontalDivider(color = BorderLight, thickness = 1.dp)
     }
 }
 

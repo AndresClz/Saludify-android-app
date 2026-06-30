@@ -1,8 +1,10 @@
 package com.example.saludify.presentation.screens.home
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +27,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.Notifications
@@ -33,8 +34,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -91,11 +97,6 @@ fun HomeScreen(onSacarTurno: () -> Unit = {}) {
                 Spacer(Modifier.height(16.dp))
             }
         }
-        GeminiFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
-        )
     }
 }
 
@@ -588,13 +589,28 @@ private fun QuickAccessCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+    val bgColor by animateColorAsState(
+        targetValue = if (isPressed) BrandPrimarySurface else BackgroundSurface,
+        animationSpec = tween(durationMillis = if (isPressed) 40 else 200),
+        label = "quickAccessBg"
+    )
+
     Row(
         modifier = modifier
             .shadow(elevation = 1.dp, shape = SaludifyRadius.card)
             .clip(SaludifyRadius.card)
-            .clickable(onClick = onClick)
-            .background(BackgroundSurface)
+            .background(bgColor)
             .border(1.dp, BorderDefault, SaludifyRadius.card)
+            .pointerInput(onClick) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        try { tryAwaitRelease() } finally { isPressed = false }
+                    },
+                    onTap = { onClick() }
+                )
+            }
             .padding(horizontal = 14.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -687,35 +703,3 @@ private fun EmergenciasSection() {
     }
 }
 
-// ── FAB Gemini ────────────────────────────────────────────────────────────────
-
-@Composable
-private fun GeminiFab(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(52.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = SaludifyRadius.full,
-                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
-            )
-            .clip(SaludifyRadius.full)
-            .background(
-                Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0f to Color(0xFF4285F4),
-                        0.55f to Color(0xFF7C3AED),
-                        1f to Color(0xFFDB2777)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = "Chat IA",
-            tint = TextOnPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}
