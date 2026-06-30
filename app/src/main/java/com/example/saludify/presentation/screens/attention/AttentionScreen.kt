@@ -1,7 +1,8 @@
 package com.example.saludify.presentation.screens.attention
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -12,19 +13,18 @@ import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.VerifiedUser
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -261,8 +261,7 @@ private fun AttentionMenuCard(
     badgeTextColor: Color = BrandPrimary,
     onClick: () -> Unit = {}
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
+    var pressed by remember { mutableStateOf(false) }
 
     val backgroundColor by animateColorAsState(
         targetValue = if (pressed) BrandPrimarySurface else BackgroundSurface,
@@ -275,14 +274,22 @@ private fun AttentionMenuCard(
         label = ""
     )
 
-    Card(
-        onClick = onClick,
-        interactionSource = interactionSource,
-        modifier = Modifier.fillMaxWidth(),
-        shape = SaludifyRadius.cardLg,
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        border = BorderStroke(1.dp, borderColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(elevation = 2.dp, shape = SaludifyRadius.cardLg)
+            .clip(SaludifyRadius.cardLg)
+            .background(backgroundColor)
+            .border(1.dp, borderColor, SaludifyRadius.cardLg)
+            .pointerInput(onClick) {
+                detectTapGestures(
+                    onPress = {
+                        pressed = true
+                        try { tryAwaitRelease() } finally { pressed = false }
+                    },
+                    onTap = { onClick() }
+                )
+            }
     ) {
         Row(
             modifier = Modifier
