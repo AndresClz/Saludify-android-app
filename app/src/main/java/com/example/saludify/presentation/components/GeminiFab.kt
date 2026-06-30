@@ -1,5 +1,8 @@
 package com.example.saludify.presentation.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
@@ -13,12 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -29,6 +32,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.saludify.ui.theme.SaludifyRadius
 import com.example.saludify.ui.theme.TextOnPrimary
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
@@ -36,42 +40,66 @@ fun DraggableGeminiFab() {
     val fabSize = 52.dp
     val margin = 16.dp
     val density = LocalDensity.current
+    val scope = rememberCoroutineScope()
 
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
-    var fabOffset by remember { mutableStateOf(Offset.Unspecified) }
+    var initialized by remember { mutableStateOf(false) }
+
+    val fabX = remember { Animatable(0f) }
+    var fabY by remember { mutableStateOf(0f) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .onSizeChanged { size ->
-                if (containerSize == IntSize.Zero) {
+                containerSize = size
+                if (!initialized) {
                     val fabSizePx = with(density) { fabSize.toPx() }
                     val marginPx = with(density) { margin.toPx() }
-                    fabOffset = Offset(
-                        x = size.width - fabSizePx - marginPx,
-                        y = size.height - fabSizePx - marginPx
-                    )
+                    scope.launch { fabX.snapTo(size.width - fabSizePx - marginPx) }
+                    fabY = size.height - fabSizePx - marginPx
+                    initialized = true
                 }
-                containerSize = size
             }
     ) {
-        if (fabOffset != Offset.Unspecified) {
+        if (initialized) {
             val fabSizePx = with(density) { fabSize.toPx() }
+            val marginPx = with(density) { margin.toPx() }
 
             Box(
                 modifier = Modifier
-                    .offset { IntOffset(fabOffset.x.roundToInt(), fabOffset.y.roundToInt()) }
+                    .offset { IntOffset(fabX.value.roundToInt(), fabY.roundToInt()) }
                     .size(fabSize)
                     .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            fabOffset = Offset(
-                                x = (fabOffset.x + dragAmount.x)
-                                    .coerceIn(0f, containerSize.width - fabSizePx),
-                                y = (fabOffset.y + dragAmount.y)
+                        detectDragGestures(
+                            onDrag = { change, dragAmount ->
+                                change.consume()
+                                scope.launch {
+                                    fabX.snapTo(
+                                        (fabX.value + dragAmount.x)
+                                            .coerceIn(0f, containerSize.width - fabSizePx)
+                                    )
+                                }
+                                fabY = (fabY + dragAmount.y)
                                     .coerceIn(0f, containerSize.height - fabSizePx)
-                            )
-                        }
+                            },
+                            onDragEnd = {
+                                val snapToRight = fabX.value > containerSize.width / 2f
+                                val targetX = if (snapToRight)
+                                    containerSize.width - fabSizePx - marginPx
+                                else
+                                    marginPx
+                                scope.launch {
+                                    fabX.animateTo(
+                                        targetX,
+                                        animationSpec = spring(
+                                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                                            stiffness = Spring.StiffnessMedium
+                                        )
+                                    )
+                                }
+                            }
+                        )
                     }
                     .shadow(
                         elevation = 8.dp,
