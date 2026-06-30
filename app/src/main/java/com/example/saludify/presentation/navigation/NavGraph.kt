@@ -7,15 +7,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-import com.example.saludify.presentation.screens.confirm.ConfirmScreen
-import com.example.saludify.presentation.screens.confirmed.ConfirmedScreen
-import com.example.saludify.presentation.screens.forwhom.ForWhomScreen
 import com.example.saludify.presentation.screens.login.LoginScreen
 import com.example.saludify.presentation.screens.main.MainScreen
 import com.example.saludify.presentation.screens.onboarding.OnboardingScreen
 import com.example.saludify.presentation.screens.profile.ProfileScreen
-import com.example.saludify.presentation.screens.results.ResultsScreen
-import com.example.saludify.presentation.screens.search.SearchScreen
+import com.example.saludify.presentation.screens.sacaturno.SacarTurnoScreen
 
 @Composable
 fun NavGraph() {
@@ -44,7 +40,7 @@ fun NavGraph() {
 
         composable(Routes.Main.route) {
             MainScreen(
-                onSacarTurno = { navController.navigate(Routes.ParaQuien.route) }
+                onSacarTurno = { navController.navigate(Routes.SacarTurno.route) }
             )
         }
 
@@ -53,38 +49,9 @@ fun NavGraph() {
         }
 
         // Flujo 2 — Sacar Turno
-        composable(Routes.ParaQuien.route) {
-            ForWhomScreen(
-                onBackClick  = { navController.popBackStack() },
-                onContinuar  = { navController.navigate(Routes.Buscar.route) }
-            )
-        }
-
-        composable(Routes.Buscar.route) {
-            SearchScreen(
-                onBackClick = { navController.popBackStack() },
-                onNext      = { navController.navigate(Routes.Resultados.route) }
-            )
-        }
-
-        composable(Routes.Resultados.route) {
-            ResultsScreen(
-                onBackClick = { navController.popBackStack() },
-                onReservar  = { navController.navigate(Routes.ConfirmarTurno.route) }
-            )
-        }
-
-        composable(Routes.ConfirmarTurno.route) {
-            ConfirmScreen(
-                onBackClick = { navController.popBackStack() },
-                onConfirmar = { navController.navigate(Routes.TurnoConfirmado.route) }
-            )
-        }
-
-        composable(Routes.TurnoConfirmado.route) {
-            ConfirmedScreen(
-                onVerTurnos    = { navController.popBackStack(Routes.Main.route, inclusive = false) },
-                onVolverInicio = { navController.popBackStack(Routes.Main.route, inclusive = false) }
+        composable(Routes.SacarTurno.route) {
+            SacarTurnoScreen(
+                onVolverAlMain = { navController.popBackStack(Routes.Main.route, inclusive = false) }
             )
         }
     }

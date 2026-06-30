@@ -58,7 +58,6 @@ import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
 import com.example.saludify.ui.theme.TextSecondary
 
-private val StepperEmpty    = Color(0xFFE5E7EB)
 private val SectionLabelColor = Color(0xFF8896AA)
 
 private val especialidadesFrecuentes = listOf(
@@ -67,7 +66,6 @@ private val especialidadesFrecuentes = listOf(
 
 @Composable
 fun SearchScreen(
-    onBackClick: () -> Unit,
     onNext: () -> Unit
 ) {
     val usuario = MockData.currentUser ?: MockData.usuarios.first()
@@ -83,11 +81,6 @@ fun SearchScreen(
             .fillMaxSize()
             .background(BackgroundApp)
     ) {
-        SearchHeader(
-            nombreUsuario = "${usuario.nombre} ${usuario.apellido}",
-            onBackClick = onBackClick
-        )
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -229,73 +222,6 @@ fun SearchScreen(
                 )
             }
         }
-    }
-}
-
-// ── Header ────────────────────────────────────────────────────────────────────
-
-@Composable
-private fun SearchHeader(
-    nombreUsuario: String,
-    onBackClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BackgroundSurface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(SaludifyRadius.full)
-                    .clickable(onClick = onBackClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = TextDefault,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Text(
-                text = "Sacar turno · $nombreUsuario",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.size(28.dp))
-        }
-
-        // Stepper: 2/4 llenos
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp)
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            repeat(4) { index ->
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(3.dp)
-                        .clip(SaludifyRadius.badge)
-                        .background(if (index < 2) BrandPrimary else StepperEmpty)
-                )
-            }
-        }
-
-        HorizontalDivider(color = BorderLight, thickness = 1.dp)
     }
 }
 

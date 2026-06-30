@@ -55,7 +55,6 @@ import com.example.saludify.ui.theme.TextOnPrimary
 import com.example.saludify.ui.theme.TextPlaceholder
 import com.example.saludify.ui.theme.TextSecondary
 
-private val StepperEmpty = Color(0xFFE5E7EB)
 
 private data class Paciente(
     val nombre: String,
@@ -73,7 +72,6 @@ private val pacientes = listOf(
 
 @Composable
 fun ForWhomScreen(
-    onBackClick: () -> Unit,
     onContinuar: () -> Unit
 ) {
     var selectedIndex by remember { mutableIntStateOf(0) }
@@ -83,8 +81,6 @@ fun ForWhomScreen(
             .fillMaxSize()
             .background(BackgroundApp)
     ) {
-        ForWhomHeader(onBackClick = onBackClick)
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -148,70 +144,6 @@ fun ForWhomScreen(
                 )
             }
         }
-    }
-}
-
-// ── Header sticky ─────────────────────────────────────────────────────────────
-
-@Composable
-private fun ForWhomHeader(onBackClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(BackgroundSurface)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(28.dp)
-                    .clip(SaludifyRadius.full)
-                    .clickable(onClick = onBackClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver",
-                    tint = TextDefault,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Text(
-                text = "Sacar turno",
-                fontSize = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = TextSecondary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(Modifier.size(28.dp))
-        }
-
-        // Stepper: 1/4 lleno
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 18.dp)
-                .padding(bottom = 12.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            repeat(4) { index ->
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(3.dp)
-                        .clip(SaludifyRadius.badge)
-                        .background(if (index < 1) BrandPrimary else StepperEmpty)
-                )
-            }
-        }
-
-        HorizontalDivider(color = BorderLight, thickness = 1.dp)
     }
 }
 
