@@ -1,11 +1,10 @@
 package com.example.saludify.presentation.screens.home
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,9 +35,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -587,10 +589,10 @@ private fun QuickAccessCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val isPressed by interactionSource.collectIsPressedAsState()
+    var isPressed by remember { mutableStateOf(false) }
     val bgColor by animateColorAsState(
         targetValue = if (isPressed) BrandPrimarySurface else BackgroundSurface,
+        animationSpec = tween(durationMillis = if (isPressed) 40 else 200),
         label = "quickAccessBg"
     )
 
@@ -600,7 +602,15 @@ private fun QuickAccessCard(
             .clip(SaludifyRadius.card)
             .background(bgColor)
             .border(1.dp, BorderDefault, SaludifyRadius.card)
-            .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
+            .pointerInput(onClick) {
+                detectTapGestures(
+                    onPress = {
+                        isPressed = true
+                        try { tryAwaitRelease() } finally { isPressed = false }
+                    },
+                    onTap = { onClick() }
+                )
+            }
             .padding(horizontal = 14.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
