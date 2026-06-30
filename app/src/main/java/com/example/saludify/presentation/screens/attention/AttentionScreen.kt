@@ -82,8 +82,8 @@ fun AttentionScreen() {
                 item {
                     AttentionMenuCard(
                         icon = Icons.Outlined.AddCircle,
-                        iconBackground = SemanticSuccessSurface,
-                        iconTint = SemanticSuccess,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
                         title = "Sacar turno",
                         subtitle = "Reservar una nueva consulta"
                     )
@@ -103,8 +103,8 @@ fun AttentionScreen() {
                 item {
                     AttentionMenuCard(
                         icon = Icons.Outlined.Description,
-                        iconBackground = SemanticPurpleSurface,
-                        iconTint = SemanticPurple,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
                         title = "Historial de consultas",
                         subtitle = "Mis atenciones anteriores"
                     )
