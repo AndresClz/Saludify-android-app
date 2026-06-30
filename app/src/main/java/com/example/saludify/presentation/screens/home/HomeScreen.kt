@@ -586,9 +586,9 @@ private fun QuickAccessCard(
         modifier = modifier
             .shadow(elevation = 1.dp, shape = SaludifyRadius.card)
             .clip(SaludifyRadius.card)
-            .clickable(onClick = onClick)
             .background(BackgroundSurface)
             .border(1.dp, BorderDefault, SaludifyRadius.card)
+            .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
