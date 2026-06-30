@@ -1,8 +1,11 @@
 package com.example.saludify.presentation.screens.home
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +35,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -582,13 +587,20 @@ private fun QuickAccessCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val bgColor by animateColorAsState(
+        targetValue = if (isPressed) BrandPrimarySurface else BackgroundSurface,
+        label = "quickAccessBg"
+    )
+
     Row(
         modifier = modifier
             .shadow(elevation = 1.dp, shape = SaludifyRadius.card)
             .clip(SaludifyRadius.card)
-            .background(BackgroundSurface)
+            .background(bgColor)
             .border(1.dp, BorderDefault, SaludifyRadius.card)
-            .clickable(onClick = onClick)
+            .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
