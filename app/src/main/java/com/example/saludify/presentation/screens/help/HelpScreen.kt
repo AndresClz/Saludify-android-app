@@ -2,6 +2,13 @@ package com.example.saludify.presentation.screens.help
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -460,17 +467,27 @@ private fun ContactoSection(
             }
         }
         // Tab content
-        if (selectedTab == 0) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                telefonos.forEach { contacto ->
-                    TelefonoCard(contacto)
+        AnimatedContent(
+            targetState = selectedTab,
+            transitionSpec = {
+                val dir = if (targetState > initialState) 1 else -1
+                slideInHorizontally(tween(260)) { dir * it } + fadeIn(tween(260)) togetherWith
+                slideOutHorizontally(tween(260)) { -dir * it } + fadeOut(tween(180))
+            },
+            label = "contact_tab"
+        ) { tab ->
+            if (tab == 0) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    telefonos.forEach { contacto ->
+                        TelefonoCard(contacto)
+                    }
                 }
-            }
-        } else {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                UbicacionBanner()
-                sucursales.forEach { sucursal ->
-                    SucursalCard(sucursal)
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    UbicacionBanner()
+                    sucursales.forEach { sucursal ->
+                        SucursalCard(sucursal)
+                    }
                 }
             }
         }
