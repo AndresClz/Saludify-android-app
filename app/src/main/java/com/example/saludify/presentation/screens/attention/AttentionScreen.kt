@@ -266,12 +266,12 @@ private fun AttentionMenuCard(
 
     val backgroundColor by animateColorAsState(
         targetValue = if (pressed) BrandPrimarySurface else BackgroundSurface,
-        animationSpec = tween(180),
+        animationSpec = tween(durationMillis = if (pressed) 40 else 200),
         label = ""
     )
     val borderColor by animateColorAsState(
         targetValue = if (pressed) BrandPrimaryBorder else BorderDefault,
-        animationSpec = tween(180),
+        animationSpec = tween(durationMillis = if (pressed) 40 else 200),
         label = ""
     )
 
