@@ -3,9 +3,13 @@ package com.example.saludify.presentation.screens.help
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -31,7 +35,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
@@ -47,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -370,6 +374,12 @@ private fun FaqCard(
     isExpanded: Boolean,
     onClick: () -> Unit
 ) {
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (isExpanded) 0f else -90f,
+        animationSpec = tween(durationMillis = 250),
+        label = "chevron"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -395,22 +405,29 @@ private fun FaqCard(
                 lineHeight = 18.sp
             )
             Icon(
-                imageVector = if (isExpanded) Icons.Default.KeyboardArrowDown
-                              else Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
                 tint = if (isExpanded) BrandPrimary else TextPlaceholder,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(chevronRotation)
             )
         }
-        if (isExpanded) {
-            HorizontalDivider(color = BackgroundSubtle)
-            Text(
-                text = faq.respuesta,
-                modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 13.dp, top = 10.dp),
-                fontSize = 12.sp,
-                color = TextMuted,
-                lineHeight = 19.sp
-            )
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = expandVertically(animationSpec = tween(durationMillis = 250)),
+            exit  = shrinkVertically(animationSpec = tween(durationMillis = 200))
+        ) {
+            Column {
+                HorizontalDivider(color = BackgroundSubtle)
+                Text(
+                    text = faq.respuesta,
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 13.dp, top = 10.dp),
+                    fontSize = 12.sp,
+                    color = TextMuted,
+                    lineHeight = 19.sp
+                )
+            }
         }
     }
 }
