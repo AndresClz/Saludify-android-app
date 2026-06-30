@@ -25,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.outlined.Notifications
@@ -91,11 +90,6 @@ fun HomeScreen(onSacarTurno: () -> Unit = {}) {
                 Spacer(Modifier.height(16.dp))
             }
         }
-        GeminiFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp)
-        )
     }
 }
 
@@ -690,32 +684,3 @@ private fun EmergenciasSection() {
 // ── FAB Gemini ────────────────────────────────────────────────────────────────
 
 @Composable
-private fun GeminiFab(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(52.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = SaludifyRadius.full,
-                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
-            )
-            .clip(SaludifyRadius.full)
-            .background(
-                Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0f to Color(0xFF4285F4),
-                        0.55f to Color(0xFF7C3AED),
-                        1f to Color(0xFFDB2777)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = "Chat IA",
-            tint = TextOnPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}

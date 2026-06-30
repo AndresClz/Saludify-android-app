@@ -29,7 +29,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -112,11 +111,6 @@ fun HelpScreen() {
                 )
             }
         }
-        HelpGeminiFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 74.dp)
-        )
     }
 }
 
@@ -760,35 +754,3 @@ private fun SucursalCard(sucursal: Sucursal) {
     }
 }
 
-// ── FAB Gemini ────────────────────────────────────────────────────────────────
-
-@Composable
-private fun HelpGeminiFab(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(52.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = SaludifyRadius.full,
-                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
-            )
-            .clip(SaludifyRadius.full)
-            .background(
-                Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0f to Color(0xFF4285F4),
-                        0.55f to Color(0xFF7C3AED),
-                        1f to Color(0xFFDB2777)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = "Chat IA",
-            tint = TextOnPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}

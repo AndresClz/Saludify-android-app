@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Description
@@ -112,11 +111,6 @@ fun AttentionScreen() {
             }
         }
 
-        GeminiFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 74.dp)
-        )
     }
 }
 
@@ -354,35 +348,3 @@ private fun AttentionMenuCard(
     }
 }
 
-// ── FAB Gemini ───────────────────────────────────────────────────────────────
-
-@Composable
-private fun GeminiFab(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(52.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = SaludifyRadius.full,
-                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
-            )
-            .clip(SaludifyRadius.full)
-            .background(
-                Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0f to Color(0xFF4285F4),
-                        0.55f to Color(0xFF7C3AED),
-                        1f to Color(0xFFDB2777)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = "Chat IA",
-            tint = TextOnPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}

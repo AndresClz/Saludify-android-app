@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 
 import com.example.saludify.presentation.components.BottomBar
+import com.example.saludify.presentation.components.DraggableGeminiFab
 
 import com.example.saludify.presentation.screens.home.HomeScreen
 import com.example.saludify.presentation.screens.profile.ProfileScreen
@@ -73,6 +74,8 @@ fun MainScreen(onSacarTurno: () -> Unit = {}) {
                     "profile" -> ProfileScreen()
                 }
             }
+
+            DraggableGeminiFab()
         }
     }
     }
