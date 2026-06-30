@@ -1,5 +1,12 @@
 package com.example.saludify.presentation.screens.results
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -90,10 +97,20 @@ fun ResultsScreen(
                 )
             }
 
-            if (selectedTab == 0) {
-                TurnosContent(onReservar = onReservar)
-            } else {
-                CartillaContent()
+            AnimatedContent(
+                targetState = selectedTab,
+                transitionSpec = {
+                    val dir = if (targetState > initialState) 1 else -1
+                    slideInHorizontally(tween(260)) { dir * it } + fadeIn(tween(260)) togetherWith
+                    slideOutHorizontally(tween(260)) { -dir * it } + fadeOut(tween(180))
+                },
+                label = "results_tab"
+            ) { tab ->
+                if (tab == 0) {
+                    TurnosContent(onReservar = onReservar)
+                } else {
+                    CartillaContent()
+                }
             }
 
             Spacer(Modifier.height(16.dp))
