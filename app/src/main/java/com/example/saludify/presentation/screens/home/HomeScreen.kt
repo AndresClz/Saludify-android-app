@@ -681,6 +681,3 @@ private fun EmergenciasSection() {
     }
 }
 
-// ── FAB Gemini ────────────────────────────────────────────────────────────────
-
-@Composable
