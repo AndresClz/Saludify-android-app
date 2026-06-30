@@ -1,13 +1,33 @@
 package com.example.saludify.presentation.screens.profile
 
-
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.FamilyRestroom
+import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.VerifiedUser
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,192 +38,81 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.example.saludify.ui.theme.*
 
-
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
-import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material.icons.outlined.CalendarMonth
-import androidx.compose.material.icons.outlined.Description
-import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.VerifiedUser
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-
-import androidx.compose.foundation.lazy.LazyColumn
-
-import androidx.compose.foundation.layout.PaddingValues
-
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.border
-import androidx.compose.material.icons.outlined.AccessTime
-import androidx.compose.material.icons.outlined.People
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Update
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.unit.em
-import androidx.compose.material.icons.outlined.Logout
-import androidx.compose.material.icons.outlined.Output
-
-
-//@Preview
 @Composable
 fun ProfileScreen() {
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundApp)
     ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            ProfileHeader()
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(start = 18.dp, end = 18.dp, top = 14.dp, bottom = 90.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                item { ProfileHeroCard() }
+                item { Spacer(Modifier.height(4.dp)) }
 
-        AttentionHeader()
-
-        Column(
-            modifier = Modifier
-                .padding(18.dp)
-        ) {
-
-            AttentionHeroCard()
-
-            Spacer(modifier = Modifier.height(18.dp))
-
-        }
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-
-            item {
-                AttentionMenuCard(
-                    icon = Icons.Outlined.Person,
-                    iconBackground = BrandPrimarySurface,
-                    iconTint = BrandPrimary,
-                    title = "Mis datos",
-                    subtitle = "Informacion personal"
-                )
-            }
-
-            item {
-                AttentionMenuCard(
-                    icon = Icons.Outlined.VerifiedUser,
-                    iconBackground = BrandPrimarySurface,
-                    iconTint = BrandPrimary,
-                    title = "Gestionar Plan",
-                    subtitle = "Cobertura y beneficios"
-                )
-            }
-
-            item {
-                AttentionMenuCard(
-                    icon = Icons.Outlined.People,
-                    iconBackground = BrandPrimarySurface,
-                    iconTint = BrandPrimary,
-                    title = "Grupo familiar",
-                    subtitle = "Familiares afiliados"
-                )
-            }
-
-
-            item {
-                AttentionMenuCard(
-                    icon = Icons.Outlined.AccessTime,
-                    iconBackground = SemanticInfoSurface,
-                    iconTint = SemanticInfo,
-                    title = "Historia de consultas",
-                    subtitle = "Mis atenciones anteriores"
-                )
-            }
-
-
-            //Boton de Cerrar secion
-            item {
-
-                Card(
-                    onClick = {
-                        // Cerrar sesión
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = SaludifyRadius.cardLg,
-                    colors = CardDefaults.cardColors(
-                        containerColor = SemanticDangerSurface
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        SemanticDangerBorder
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 1.dp
+                item {
+                    ProfileMenuCard(
+                        icon = Icons.Outlined.Person,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
+                        title = "Mis datos",
+                        subtitle = "Información personal"
                     )
-                ) {
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 18.dp, vertical = 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(SaludifyRadius.icon)
-                                .background(SemanticDanger.copy(alpha = 0.10f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Icon(
-                                imageVector = Icons.Outlined.Logout,
-                                contentDescription = "Cerrar sesión",
-                                tint = SemanticDanger,
-                                modifier = Modifier.size(22.dp)
-                            )
-
-                        }
-
-                        Spacer(modifier = Modifier.width(14.dp))
-
-                        Text(
-                            text = "Cerrar sesión",
-                            color = SemanticDanger,
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-
-                    }
-
+                }
+                item {
+                    ProfileMenuCard(
+                        icon = Icons.Outlined.VerifiedUser,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
+                        title = "Gestionar Plan",
+                        subtitle = "Cobertura y beneficios"
+                    )
+                }
+                item {
+                    ProfileMenuCard(
+                        icon = Icons.Outlined.FamilyRestroom,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
+                        title = "Grupo familiar",
+                        subtitle = "Familiares afiliados",
+                        badge = "3",
+                        badgeBackground = BrandPrimarySurface,
+                        badgeTextColor = BrandPrimary
+                    )
+                }
+                item {
+                    ProfileMenuCard(
+                        icon = Icons.Outlined.Description,
+                        iconBackground = BrandPrimarySurface,
+                        iconTint = BrandPrimary,
+                        title = "Historial de consultas",
+                        subtitle = "Mis atenciones anteriores"
+                    )
                 }
 
+                item { LogoutCard() }
             }
-
-
-
-            item {
-                Spacer(Modifier.height(90.dp))
-            }
-
         }
 
+        GeminiFab(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 74.dp)
+        )
     }
 }
 
-
-
 @Composable
-private fun AttentionHeader() {
-
+private fun ProfileHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,7 +122,6 @@ private fun AttentionHeader() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Logo: badge "S" + wordmark
         Row(
             horizontalArrangement = Arrangement.spacedBy(7.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -233,255 +141,194 @@ private fun AttentionHeader() {
                 )
             }
             Text(
-                text = "Atención",
-                fontSize = 22.sp,
+                text = "Mi perfil",
+                fontSize = 17.sp,
                 fontWeight = FontWeight.Bold,
-                color = TextDefault
+                color = TextDefault,
+                letterSpacing = (-0.3).sp
             )
         }
-
-
-
+        Box(
+            modifier = Modifier
+                .size(34.dp)
+                .clip(CircleShape)
+                .background(BackgroundSubtle),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Settings,
+                contentDescription = "Configuración",
+                tint = TextMuted,
+                modifier = Modifier.size(18.dp)
+            )
+        }
     }
-
-    HorizontalDivider(
-        color = BorderLight
-    )
-
+    HorizontalDivider(color = BorderLight)
 }
 
 @Preview(showSystemUi = true)
 @Composable
-private fun PreviewAttention() {
-
+private fun PreviewProfile() {
     SaludifyTheme {
-
         Surface {
-
             ProfileScreen()
-
         }
-
     }
-
 }
 
 @Composable
-private fun AttentionHeroCard() {
-
+private fun ProfileHeroCard() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(175.dp)
+            .shadow(elevation = 8.dp, shape = SaludifyRadius.panel)
             .clip(SaludifyRadius.panel)
             .background(
                 Brush.linearGradient(
-                    colors = listOf(
-                        BrandPrimaryDark,
-                        BrandPrimary,
-                        BrandPrimaryLight
-                    )
+                    colors = listOf(BrandPrimaryDark, BrandPrimary, BrandPrimaryLight)
                 )
             )
     ) {
-
-        // círculos decorativos
+        // Círculos decorativos
         Box(
             modifier = Modifier
                 .size(110.dp)
                 .align(Alignment.TopEnd)
-                .offset(x = 30.dp, y = (-25).dp)
+                .offset(x = 30.dp, y = (-30).dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = .08f))
+                .background(Color.White.copy(alpha = 0.07f))
         )
-
         Box(
             modifier = Modifier
-                .size(70.dp)
-                .align(Alignment.BottomEnd)
-                .offset(x = 18.dp, y = 18.dp)
+                .size(80.dp)
+                .align(Alignment.BottomStart)
+                .offset(x = (-20).dp, y = 20.dp)
                 .clip(CircleShape)
-                .background(Color.White.copy(alpha = .05f))
+                .background(Color.White.copy(alpha = 0.05f))
         )
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(18.dp)
+                .fillMaxWidth()
+                .padding(20.dp)
         ) {
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(
                     modifier = Modifier
-                        .size(56.dp)
+                        .size(64.dp)
                         .clip(CircleShape)
-                        .background(Color.White.copy(.15f))
-                        .border(
-                            1.dp,
-                            Color.White.copy(.35f),
-                            CircleShape
-                        ),
+                        .background(Color.White.copy(alpha = 0.22f))
+                        .border(2.dp, Color.White.copy(alpha = 0.4f), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
-
                     Text(
-                        "M",
+                        text = "M",
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp
+                        fontSize = 26.sp
                     )
-
                 }
 
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(16.dp))
 
                 Column {
-
                     Text(
                         text = "María González",
                         color = Color.White,
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = (-0.3).sp
                     )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-
-                        HeroBadge("Plan Premium")
-
-                        HeroBadge("DNI 12.345.678")
-
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                        HeroBadge(text = "Plan Premium", backgroundAlpha = 0.22f)
+                        HeroBadge(text = "DNI 12.345.678", backgroundAlpha = 0.12f)
                     }
-
                 }
-
             }
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            HorizontalDivider(
-                color = Color.White.copy(alpha = .20f)
-            )
-
+            Spacer(modifier = Modifier.height(14.dp))
+            HorizontalDivider(color = Color.White.copy(alpha = 0.15f))
             Spacer(modifier = Modifier.height(10.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
+                HeroInfo(label = "AFILIADO DESDE", value = "Enero 2018")
                 HeroInfo(
-                    "AFILIADO DESDE",
-                    "Enero 2018"
+                    label = "PRÓXIMA CUOTA",
+                    value = "Vence 30 Jun",
+                    valueColor = Color(0xFFFDE68A)
                 )
-
-                HeroInfo(
-                    "PRÓXIMA CUOTA",
-                    "Vence 30 Jun"
-                )
-
-                HeroInfo(
-                    "GRUPO",
-                    "3 integrantes"
-                )
-
+                HeroInfo(label = "GRUPO", value = "3 integrantes")
             }
-
         }
-
     }
-
 }
 
 @Composable
-private fun HeroBadge(
-    text: String
-) {
-
+private fun HeroBadge(text: String, backgroundAlpha: Float = 0.18f) {
     Box(
         modifier = Modifier
             .clip(SaludifyRadius.badge)
-            .background(Color.White.copy(.15f))
-            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .background(Color.White.copy(alpha = backgroundAlpha))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
-
         Text(
             text = text,
             color = Color.White,
             fontSize = 11.sp,
             fontWeight = FontWeight.Medium
         )
-
     }
-
 }
 
 @Composable
 private fun HeroInfo(
-    title: String,
-    value: String
+    label: String,
+    value: String,
+    valueColor: Color = Color.White
 ) {
-
     Column {
-
         Text(
-            text = title,
-            color = Color.White.copy(alpha = .65f),
-            fontSize = 10.sp
+            text = label,
+            color = Color.White.copy(alpha = 0.55f),
+            fontSize = 10.sp,
+            letterSpacing = 0.08.em
         )
-
         Spacer(modifier = Modifier.height(2.dp))
-
         Text(
             text = value,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 14.sp
+            color = valueColor,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 13.sp
         )
-
     }
-
 }
 
 @Composable
-private fun AttentionMenuCard(
+private fun ProfileMenuCard(
     icon: ImageVector,
     iconBackground: Color,
     iconTint: Color,
     title: String,
     subtitle: String,
     badge: String? = null,
+    badgeBackground: Color = BrandPrimarySurface,
+    badgeTextColor: Color = BrandPrimary,
     onClick: () -> Unit = {}
 ) {
-
-    val interactionSource = remember {
-        MutableInteractionSource()
-    }
-
+    val interactionSource = remember { MutableInteractionSource() }
     val pressed by interactionSource.collectIsPressedAsState()
 
     val backgroundColor by animateColorAsState(
-        targetValue =
-            if (pressed)
-                BrandPrimarySurface
-            else
-                BackgroundSurface,
+        targetValue = if (pressed) BrandPrimarySurface else BackgroundSurface,
         animationSpec = tween(180),
         label = ""
     )
-
     val borderColor by animateColorAsState(
-        targetValue =
-            if (pressed)
-                BrandPrimaryBorder
-            else
-                BorderDefault,
+        targetValue = if (pressed) BrandPrimaryBorder else BorderDefault,
         animationSpec = tween(180),
         label = ""
     )
@@ -491,85 +338,63 @@ private fun AttentionMenuCard(
         interactionSource = interactionSource,
         modifier = Modifier.fillMaxWidth(),
         shape = SaludifyRadius.cardLg,
-        colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
-        ),
-        border = BorderStroke(
-            1.dp,
-            borderColor
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        border = BorderStroke(1.dp, borderColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(18.dp),
+                .padding(horizontal = 18.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Box(
                 modifier = Modifier
-                    .size(48.dp)
-                    .clip(SaludifyRadius.icon)
+                    .size(42.dp)
+                    .clip(SaludifyRadius.iconLg)
                     .background(iconBackground),
                 contentAlignment = Alignment.Center
             ) {
-
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = iconTint,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(22.dp)
                 )
-
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(14.dp))
 
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
-                    fontSize = 15.sp,
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = TextDefault
                 )
-
-                Spacer(modifier = Modifier.height(3.dp))
-
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = subtitle,
                     fontSize = 12.sp,
-                    color = TextMuted
+                    color = TextPlaceholder
                 )
-
             }
 
             if (badge != null) {
-
                 Box(
                     modifier = Modifier
-                        .padding(end = 10.dp)
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(SemanticDanger),
-                    contentAlignment = Alignment.Center
+                        .padding(end = 8.dp)
+                        .clip(SaludifyRadius.badge)
+                        .background(badgeBackground)
+                        .padding(horizontal = 9.dp, vertical = 3.dp)
                 ) {
-
                     Text(
                         text = badge,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
+                        color = badgeTextColor,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 11.sp
                     )
-
                 }
-
             }
 
             Icon(
@@ -577,9 +402,80 @@ private fun AttentionMenuCard(
                 contentDescription = null,
                 tint = if (pressed) BrandPrimary else TextPlaceholder
             )
-
         }
-
     }
+}
 
+@Composable
+private fun LogoutCard(onClick: () -> Unit = {}) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier.fillMaxWidth(),
+        shape = SaludifyRadius.cardLg,
+        colors = CardDefaults.cardColors(containerColor = SemanticDangerSurface),
+        border = BorderStroke(1.dp, SemanticDangerBorder),
+        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(42.dp)
+                    .clip(SaludifyRadius.iconLg)
+                    .background(SemanticDangerSurfaceStrong),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Logout,
+                    contentDescription = null,
+                    tint = SemanticDanger,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(14.dp))
+            Text(
+                text = "Cerrar sesión",
+                color = SemanticDanger,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+// ── FAB Gemini ───────────────────────────────────────────────────────────────
+
+@Composable
+private fun GeminiFab(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier
+            .size(52.dp)
+            .shadow(
+                elevation = 8.dp,
+                shape = SaludifyRadius.full,
+                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
+            )
+            .clip(SaludifyRadius.full)
+            .background(
+                Brush.linearGradient(
+                    colorStops = arrayOf(
+                        0f to Color(0xFF4285F4),
+                        0.55f to Color(0xFF7C3AED),
+                        1f to Color(0xFFDB2777)
+                    )
+                )
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.AutoAwesome,
+            contentDescription = "Chat IA",
+            tint = TextOnPrimary,
+            modifier = Modifier.size(22.dp)
+        )
+    }
 }
