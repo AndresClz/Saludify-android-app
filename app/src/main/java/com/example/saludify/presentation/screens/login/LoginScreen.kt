@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -76,6 +77,7 @@ fun LoginScreen(
             .fillMaxSize()
             .background(BackgroundSurface)
             .statusBarsPadding()
+            .navigationBarsPadding()
             .padding(top = 24.dp, start = 22.dp, end = 22.dp, bottom = 38.dp)
     ) {
         IconButton(
