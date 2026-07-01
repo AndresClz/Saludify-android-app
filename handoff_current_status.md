@@ -78,9 +78,9 @@ MainScreen → SacarTurnoScreen (scaffold con header+stepper fijos)
 | 02 | OnboardingScreen | ✅ Implementada | Ícono "Soy afiliado" → `Icons.Outlined.Person`; ambas cards usan `BrandPrimarySurface`; `statusBarsPadding()` aplicado |
 | 03 | LoginScreen | ✅ Implementada | DNI + contraseña; `statusBarsPadding()` aplicado |
 | 05 | HomeScreen | ✅ Implementada (rediseño v2) | Ver detalle de secciones abajo |
-| 06 | AttentionScreen | ✅ Implementada (mergeada PR #5) | Hero gradiente "Buenos días, María" + 5 items BrandPrimary (Mis turnos badge naranja, Historial purple) + FAB Gemini bottom 74dp |
-| 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items + FAB Gemini |
-| 08 | ProfileScreen | ✅ Implementada (mergeada PR #6) | Hero gradiente + avatar 64dp + "Vence 30 Jun" amarillo `#FDE68A` + Grupo familiar badge "3" + LogoutCard + FAB Gemini bottom 74dp |
+| 06 | AttentionScreen | ✅ Implementada (mergeada PR #5, #7) | Hero gradiente + 5 items con highlight al presionar; FAB movido a MainScreen |
+| 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items (ver spec Frame 07) |
+| 08 | ProfileScreen | ✅ Implementada (mergeada PR #6, #7) | Hero gradiente + avatar 64dp + LogoutCard con highlight; FAB movido a MainScreen |
 | 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales animado; botones "Llamar" y "Cómo llegar" funcionales |
 
 ### Flujo 2 — Sacar Turno
@@ -349,20 +349,23 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ---
 
-## Branch activo: `feature/animations` — PR #7 abierto → main
+## Branch activo: `main` (PR #7 mergeado)
 
-Commits en el branch (sobre `main`):
-1. `feat: animación direccional al cambiar tabs del BottomBar` — MainScreen.kt
-2. `feat: header y stepper fijos en el flujo Sacar Turno` — SacarTurnoScreen + refactor
-3. `feat: animación direccional en segmented control de Ayuda` — HelpScreen.kt
-4. `feat: animación direccional en segmented control de Resultados` — ResultsScreen.kt
-5. `fix: extraer TurnoConfirmado del AnimatedContent al NavGraph` — bugfix layout shift
-6. `fix: agregar imports faltantes de fadeIn, fadeOut y tween en NavGraph` — compile error resuelto
-7. `feat: FAB de IA draggable y centralizado en MainScreen` — `components/GeminiFab.kt` nuevo; eliminado de HomeScreen, AttentionScreen, ProfileScreen, HelpScreen
-8. `feat: snap al borde más cercano al soltar el FAB` — spring animation al edge izquierdo/derecho
-9. `fix: highlight visible en QuickAccessCard al presionar` — `pointerInput + detectTapGestures + animateColorAsState`; sustituye `clickable` que no disparaba dentro de `verticalScroll`
+PR #7 `feature/animations` mergeado a `main` el 2026-07-01. Incluye:
+1. Slide horizontal estilo iOS en todas las rutas del NavGraph
+2. `ConfirmedScreen` con transición `fadeIn/fadeOut` propia
+3. `AnimatedContent` con slide direccional en tabs del BottomBar (280ms)
+4. Header y stepper fijos en flujo Sacar Turno; slide direccional en pasos
+5. Slide direccional en segmented controls de HelpScreen y ResultsScreen
+6. `DraggableGeminiFab` en `components/GeminiFab.kt` — centralizado en MainScreen, snap al borde con spring, ausente en flujo Sacar Turno
+7. Highlight al presionar con `pointerInput + detectTapGestures + animateColorAsState`:
+   - `QuickAccessCard` (HomeScreen) — fondo anima a `BrandPrimarySurface`
+   - `AttentionMenuCard` (AttentionScreen) — fondo + borde animados
+   - `ProfileMenuCard` + `LogoutCard` (ProfileScreen) — fondo + borde animados
+   - `FaqCard` (HelpScreen) — `expandVertically/shrinkVertically` + rotación del chevron
+8. Patrón consolidado: `collectIsPressedAsState` NO funciona en `LazyColumn` ni `verticalScroll`; usar siempre `pointerInput + detectTapGestures` con `try/finally`
 
-**Estado del branch:** compila sin errores, PR #7 abierto y actualizado.
+**Próximo trabajo:** implementar `ProceduresScreen` (único stub pendiente).
 
 ---
 
@@ -376,13 +379,39 @@ Commits en el branch (sobre `main`):
 
 ---
 
+## Patrón de highlight al presionar (consolidado)
+
+**No usar** `collectIsPressedAsState` + `MutableInteractionSource` — no cancela correctamente en `LazyColumn` ni `verticalScroll`, dejando el highlight pegado.
+
+**Usar siempre:**
+```kotlin
+var pressed by remember { mutableStateOf(false) }
+val bgColor by animateColorAsState(
+    targetValue = if (pressed) BrandPrimarySurface else BackgroundSurface,
+    animationSpec = tween(durationMillis = if (pressed) 40 else 200),
+    label = ""
+)
+Modifier.pointerInput(onClick) {
+    detectTapGestures(
+        onPress = {
+            pressed = true
+            try { tryAwaitRelease() } finally { pressed = false }
+        },
+        onTap = { onClick() }
+    )
+}
+```
+El `try/finally` garantiza que `pressed` siempre vuelve a `false` aunque el gesto sea cancelado por scroll.
+
+---
+
 ## Progreso general
 
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
-Flujo 1              [✅][✅][✅][✅][🔴][✅][✅]   6/7 mergeadas · 1 stub (sin Splash)
+Flujo 1              [✅][✅][✅][✅][🔴][✅][✅]   6/7 mergeadas · 1 stub (ProceduresScreen)
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
-Animaciones          [✅][✅][✅][✅][✅][✅][✅]   7/7 · sin errores pendientes
+Animaciones + UI     [✅][✅][✅][✅][✅][✅][✅]   mergeado en main (PR #7)
 ```
 
-> Última actualización: 2026-06-29 (PR #7 abierto: animaciones de navegación, FAB draggable con snap, highlight en QuickAccessCard; **ProceduresScreen es la única pantalla de contenido pendiente**)
+> Última actualización: 2026-07-01 (PR #7 mergeado; **ProceduresScreen es la única pantalla de contenido pendiente**)
