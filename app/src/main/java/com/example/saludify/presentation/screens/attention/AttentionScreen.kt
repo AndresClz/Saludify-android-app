@@ -354,4 +354,3 @@ private fun AttentionMenuCard(
         }
     }
 }
-
