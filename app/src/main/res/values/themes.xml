@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Saludify" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Saludify" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Fondo azul mientras carga la actividad (API 24-30) -->
+        <item name="android:windowBackground">@color/brand_primary</item>
+    </style>
 </resources>
