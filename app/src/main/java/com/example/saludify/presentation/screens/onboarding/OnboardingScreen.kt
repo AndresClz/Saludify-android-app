@@ -1,6 +1,7 @@
 package com.example.saludify.presentation.screens.onboarding
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import com.example.saludify.R
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -129,20 +133,12 @@ private fun LogoRow() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .size(28.dp)
-                .background(BrandPrimary, RoundedCornerShape(8.dp)),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "S",
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.ExtraBold,
-                lineHeight = 12.sp
-            )
-        }
+        Image(
+            painter = painterResource(R.drawable.ic_logo),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp),
+            colorFilter = ColorFilter.tint(BrandPrimary)
+        )
         Text(
             text = "Saludify",
             color = BrandPrimary,
