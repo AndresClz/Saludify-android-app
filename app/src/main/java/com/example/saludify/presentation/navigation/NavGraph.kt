@@ -46,7 +46,15 @@ fun NavGraph() {
             )
         }
 
-        composable(Routes.Onboarding.route) {
+        composable(
+            route = Routes.Onboarding.route,
+            enterTransition = {
+                if (initialState.destination.route == Routes.Splash.route)
+                    fadeIn(tween(400))
+                else
+                    slideInHorizontally(initialOffsetX = { -it / 3 })
+            }
+        ) {
             OnboardingScreen(
                 onAfiliadoClick = { navController.navigate(Routes.Login.route) }
             )

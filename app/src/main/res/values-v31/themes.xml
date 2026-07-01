@@ -3,6 +3,7 @@
 
     <!-- Android 12+ splash screen API -->
     <style name="Theme.Saludify" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/brand_primary</item>
         <item name="android:windowSplashScreenBackground">@color/brand_primary</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_logo_white</item>
         <item name="android:windowSplashScreenIconBackgroundColor">@android:color/transparent</item>
