@@ -22,7 +22,7 @@ com.example.saludify/
 │       ├── login/         LoginScreen.kt + LoginViewModel.kt  ✅
 │       ├── home/          HomeScreen.kt  ✅
 │       ├── attention/     AttentionScreen.kt  ✅
-│       ├── procedures/    ProceduresScreen.kt  🔴 stub
+│       ├── procedures/    ProceduresScreen.kt  ✅
 │       ├── help/          HelpScreen.kt  ✅
 │       ├── profile/       ProfileScreen.kt  ✅
 │       ├── main/          MainScreen.kt  (Scaffold + BottomBar)
@@ -79,7 +79,7 @@ MainScreen → SacarTurnoScreen (scaffold con header+stepper fijos)
 | 03 | LoginScreen | ✅ Implementada | DNI + contraseña; `statusBarsPadding()` aplicado |
 | 05 | HomeScreen | ✅ Implementada (rediseño v2) | Ver detalle de secciones abajo |
 | 06 | AttentionScreen | ✅ Implementada (mergeada PR #5, #7) | Hero gradiente + 5 items con highlight al presionar; FAB movido a MainScreen |
-| 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items (ver spec Frame 07) |
+| 07 | ProceduresScreen | ✅ Implementada (mergeada PR #8, fix PR #9) | Hero blanco con 3 chips de estado + 5 items con highlight al presionar; FAB en MainScreen |
 | 08 | ProfileScreen | ✅ Implementada (mergeada PR #6, #7) | Hero gradiente + avatar 64dp + LogoutCard con highlight; FAB movido a MainScreen |
 | 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales animado; botones "Llamar" y "Cómo llegar" funcionales |
 
@@ -349,7 +349,19 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ---
 
-## Branch activo: `main` (PR #7 mergeado)
+## Branch activo: `main` (PR #9 pendiente de merge)
+
+PR #8 `feature/procedure-screen` mergeado a `main` el 2026-07-01. Implementa `ProceduresScreen`.
+
+PR #9 `fix/procedures-screen` abierto — corrige bugs y desviaciones de spec del PR #8:
+1. `collectIsPressedAsState` → `pointerInput + detectTapGestures` en `ProceduresMenuCard`
+2. Elimina `GeminiFab` local duplicado
+3. Hero card: título 12sp, sombra 2dp, altura dinámica, borde `BorderDefault`
+4. Chips de estado: colores correctos por spec; número 22sp ExtraBold; sin `HorizontalDivider` interno
+5. Íconos semánticos por item (`AssignmentTurnedIn`, `AccountBalance`, `Calculate`, `Receipt`, `CreditCard`)
+6. Subtítulos y badges corregidos al texto exacto de la spec
+7. `StatusChip`, `ProceduresMenuCard`, `ProceduresHeader` pasados a `private`
+8. `.gitignore`: agrega `/.idea/inspectionProfiles` y `/.idea/misc.xml`; destrackea `misc.xml`
 
 PR #7 `feature/animations` mergeado a `main` el 2026-07-01. Incluye:
 1. Slide horizontal estilo iOS en todas las rutas del NavGraph
@@ -363,9 +375,10 @@ PR #7 `feature/animations` mergeado a `main` el 2026-07-01. Incluye:
    - `AttentionMenuCard` (AttentionScreen) — fondo + borde animados
    - `ProfileMenuCard` + `LogoutCard` (ProfileScreen) — fondo + borde animados
    - `FaqCard` (HelpScreen) — `expandVertically/shrinkVertically` + rotación del chevron
+   - `ProceduresMenuCard` (ProceduresScreen) — fondo + borde animados
 8. Patrón consolidado: `collectIsPressedAsState` NO funciona en `LazyColumn` ni `verticalScroll`; usar siempre `pointerInput + detectTapGestures` con `try/finally`
 
-**Próximo trabajo:** implementar `ProceduresScreen` (único stub pendiente).
+**Próximo trabajo:** mergear PR #9 y preparar demo.
 
 ---
 
@@ -409,9 +422,9 @@ El `try/finally` garantiza que `pressed` siempre vuelve a `false` aunque el gest
 
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
-Flujo 1              [✅][✅][✅][✅][🔴][✅][✅]   6/7 mergeadas · 1 stub (ProceduresScreen)
+Flujo 1              [✅][✅][✅][✅][✅][✅][✅]   7/7 mergeadas
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
 Animaciones + UI     [✅][✅][✅][✅][✅][✅][✅]   mergeado en main (PR #7)
 ```
 
-> Última actualización: 2026-07-01 (PR #7 mergeado; **ProceduresScreen es la única pantalla de contenido pendiente**)
+> Última actualización: 2026-07-01 (PR #8 mergeado · PR #9 abierto con fixes de ProceduresScreen · **todas las pantallas de contenido implementadas**)
