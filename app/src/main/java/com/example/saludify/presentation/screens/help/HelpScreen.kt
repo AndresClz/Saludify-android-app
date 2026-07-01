@@ -2,6 +2,17 @@ package com.example.saludify.presentation.screens.help
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,7 +33,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -41,6 +51,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -105,11 +116,6 @@ fun HelpScreen() {
                 )
             }
         }
-        HelpGeminiFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 74.dp)
-        )
     }
 }
 
@@ -369,6 +375,12 @@ private fun FaqCard(
     isExpanded: Boolean,
     onClick: () -> Unit
 ) {
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (isExpanded) 0f else -90f,
+        animationSpec = tween(durationMillis = 250),
+        label = "chevron"
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -394,22 +406,29 @@ private fun FaqCard(
                 lineHeight = 18.sp
             )
             Icon(
-                imageVector = if (isExpanded) Icons.Default.KeyboardArrowDown
-                              else Icons.Default.KeyboardArrowRight,
+                imageVector = Icons.Default.KeyboardArrowDown,
                 contentDescription = null,
                 tint = if (isExpanded) BrandPrimary else TextPlaceholder,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(chevronRotation)
             )
         }
-        if (isExpanded) {
-            HorizontalDivider(color = BackgroundSubtle)
-            Text(
-                text = faq.respuesta,
-                modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 13.dp, top = 10.dp),
-                fontSize = 12.sp,
-                color = TextMuted,
-                lineHeight = 19.sp
-            )
+        AnimatedVisibility(
+            visible = isExpanded,
+            enter = expandVertically(animationSpec = tween(durationMillis = 250)),
+            exit  = shrinkVertically(animationSpec = tween(durationMillis = 200))
+        ) {
+            Column {
+                HorizontalDivider(color = BackgroundSubtle)
+                Text(
+                    text = faq.respuesta,
+                    modifier = Modifier.padding(start = 15.dp, end = 15.dp, bottom = 13.dp, top = 10.dp),
+                    fontSize = 12.sp,
+                    color = TextMuted,
+                    lineHeight = 19.sp
+                )
+            }
         }
     }
 }
@@ -460,17 +479,27 @@ private fun ContactoSection(
             }
         }
         // Tab content
-        if (selectedTab == 0) {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                telefonos.forEach { contacto ->
-                    TelefonoCard(contacto)
+        AnimatedContent(
+            targetState = selectedTab,
+            transitionSpec = {
+                val dir = if (targetState > initialState) 1 else -1
+                slideInHorizontally(tween(260)) { dir * it } + fadeIn(tween(260)) togetherWith
+                slideOutHorizontally(tween(260)) { -dir * it } + fadeOut(tween(180))
+            },
+            label = "contact_tab"
+        ) { tab ->
+            if (tab == 0) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    telefonos.forEach { contacto ->
+                        TelefonoCard(contacto)
+                    }
                 }
-            }
-        } else {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                UbicacionBanner()
-                sucursales.forEach { sucursal ->
-                    SucursalCard(sucursal)
+            } else {
+                Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                    UbicacionBanner()
+                    sucursales.forEach { sucursal ->
+                        SucursalCard(sucursal)
+                    }
                 }
             }
         }
@@ -743,35 +772,3 @@ private fun SucursalCard(sucursal: Sucursal) {
     }
 }
 
-// ── FAB Gemini ────────────────────────────────────────────────────────────────
-
-@Composable
-private fun HelpGeminiFab(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(52.dp)
-            .shadow(
-                elevation = 8.dp,
-                shape = SaludifyRadius.full,
-                spotColor = Color(0xFF7C3AED).copy(alpha = 0.45f)
-            )
-            .clip(SaludifyRadius.full)
-            .background(
-                Brush.linearGradient(
-                    colorStops = arrayOf(
-                        0f to Color(0xFF4285F4),
-                        0.55f to Color(0xFF7C3AED),
-                        1f to Color(0xFFDB2777)
-                    )
-                )
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.AutoAwesome,
-            contentDescription = "Chat IA",
-            tint = TextOnPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}

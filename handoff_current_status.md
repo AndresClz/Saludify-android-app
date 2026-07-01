@@ -21,11 +21,17 @@ com.example.saludify/
 │       ├── onboarding/    OnboardingScreen.kt  ✅
 │       ├── login/         LoginScreen.kt + LoginViewModel.kt  ✅
 │       ├── home/          HomeScreen.kt  ✅
-│       ├── attention/     AttentionScreen.kt  🔴 stub
+│       ├── attention/     AttentionScreen.kt  ✅
 │       ├── procedures/    ProceduresScreen.kt  🔴 stub
-│       ├── help/          HelpScreen.kt  🔴 stub
-│       ├── profile/       ProfileScreen.kt  🔴 stub
-│       └── main/          MainScreen.kt  (Scaffold + BottomBar)
+│       ├── help/          HelpScreen.kt  ✅
+│       ├── profile/       ProfileScreen.kt  ✅
+│       ├── main/          MainScreen.kt  (Scaffold + BottomBar)
+│       ├── sacaturno/     SacarTurnoScreen.kt  ✅ (scaffold compartido del flujo)
+│       ├── forwhom/       ForWhomScreen.kt  ✅
+│       ├── search/        SearchScreen.kt  ✅
+│       ├── results/       ResultsScreen.kt  ✅
+│       ├── confirm/       ConfirmScreen.kt  ✅
+│       └── confirmed/     ConfirmedScreen.kt  ✅
 └── ui/theme/              Color.kt, Theme.kt, Type.kt, Shape.kt
 ```
 
@@ -45,10 +51,20 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
                                      ├── ProceduresScreen  (tab: Trámites)
                                      ├── HelpScreen        (tab: Ayuda)
                                      └── ProfileScreen     (tab: Perfil)
+
+MainScreen → SacarTurnoScreen (scaffold con header+stepper fijos)
+                 ├── ForWhomScreen   (step 0)
+                 ├── SearchScreen    (step 1)
+                 ├── ResultsScreen   (step 2)
+                 └── ConfirmScreen   (step 3)
+             → ConfirmedScreen       (ruta NavGraph independiente)
 ```
 
 **Transiciones NavGraph:** slide horizontal estilo iOS (push entra por derecha, pop sale por derecha).
-**Flujo "Sacar turno"** (pendiente de navegación): se accede desde HomeScreen (acceso rápido "Sacar turno") → pantallas 11→12→13→14.
+**Tabs del BottomBar:** `AnimatedContent` con slide direccional (izquierda/derecha según índice del tab), 280ms.
+**Flujo Sacar Turno:** `SacarTurnoScreen` maneja pasos 0–3 con `AnimatedContent` (mismo slide direccional). Header y stepper son fijos (fuera del AnimatedContent). El stepper anima el color de cada segmento con `tween(300)` al avanzar/retroceder.
+**ConfirmedScreen:** ruta NavGraph separada con transición `fadeIn/fadeOut` (no slide), apropiada para pantalla de éxito.
+**Segmented controls:** `AnimatedContent` con slide direccional en HelpScreen (Teléfonos↔Sucursales) y ResultsScreen (Turnos↔Cartilla), 260ms.
 
 ---
 
@@ -62,10 +78,10 @@ OnboardingScreen → LoginScreen → MainScreen (Scaffold con BottomBar)
 | 02 | OnboardingScreen | ✅ Implementada | Ícono "Soy afiliado" → `Icons.Outlined.Person`; ambas cards usan `BrandPrimarySurface`; `statusBarsPadding()` aplicado |
 | 03 | LoginScreen | ✅ Implementada | DNI + contraseña; `statusBarsPadding()` aplicado |
 | 05 | HomeScreen | ✅ Implementada (rediseño v2) | Ver detalle de secciones abajo |
-| 06 | AttentionScreen | 🔴 Stub | Hero gradiente + lista 5 items + FAB Gemini |
-| 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items + FAB Gemini |
-| 08 | ProfileScreen | 🔴 Stub | Hero gradiente + menú + cerrar sesión + FAB Gemini |
-| 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales; botones "Llamar" y "Cómo llegar" funcionales |
+| 06 | AttentionScreen | ✅ Implementada (mergeada PR #5, #7) | Hero gradiente + 5 items con highlight al presionar; FAB movido a MainScreen |
+| 07 | ProceduresScreen | 🔴 Stub | Hero stats + lista 5 items (ver spec Frame 07) |
+| 08 | ProfileScreen | ✅ Implementada (mergeada PR #6, #7) | Hero gradiente + avatar 64dp + LogoutCard con highlight; FAB movido a MainScreen |
+| 09 | HelpScreen | ✅ Implementada | Chat IA + buscador + FAQ accordion + segmented Teléfonos/Sucursales animado; botones "Llamar" y "Cómo llegar" funcionales |
 
 ### Flujo 2 — Sacar Turno
 
@@ -333,12 +349,69 @@ Card `#fff5f5`, borde `#fecaca`, ícono bg `#fee2e2` (salida derecha en rojo), "
 
 ---
 
+## Branch activo: `main` (PR #7 mergeado)
+
+PR #7 `feature/animations` mergeado a `main` el 2026-07-01. Incluye:
+1. Slide horizontal estilo iOS en todas las rutas del NavGraph
+2. `ConfirmedScreen` con transición `fadeIn/fadeOut` propia
+3. `AnimatedContent` con slide direccional en tabs del BottomBar (280ms)
+4. Header y stepper fijos en flujo Sacar Turno; slide direccional en pasos
+5. Slide direccional en segmented controls de HelpScreen y ResultsScreen
+6. `DraggableGeminiFab` en `components/GeminiFab.kt` — centralizado en MainScreen, snap al borde con spring, ausente en flujo Sacar Turno
+7. Highlight al presionar con `pointerInput + detectTapGestures + animateColorAsState`:
+   - `QuickAccessCard` (HomeScreen) — fondo anima a `BrandPrimarySurface`
+   - `AttentionMenuCard` (AttentionScreen) — fondo + borde animados
+   - `ProfileMenuCard` + `LogoutCard` (ProfileScreen) — fondo + borde animados
+   - `FaqCard` (HelpScreen) — `expandVertically/shrinkVertically` + rotación del chevron
+8. Patrón consolidado: `collectIsPressedAsState` NO funciona en `LazyColumn` ni `verticalScroll`; usar siempre `pointerInput + detectTapGestures` con `try/finally`
+
+**Próximo trabajo:** implementar `ProceduresScreen` (único stub pendiente).
+
+---
+
+## FAB Gemini — arquitectura actual
+
+- Vive en `presentation/components/GeminiFab.kt` como `DraggableGeminiFab()`
+- Se instancia una sola vez en `MainScreen`, fuera del `AnimatedContent` de tabs
+- Posición inicial: bottom-end con margen 16dp
+- Al soltar: snap animado con spring al borde izquierdo o derecho más cercano
+- Ausente automáticamente en el flujo Sacar Turno (rutas separadas del NavGraph)
+
+---
+
+## Patrón de highlight al presionar (consolidado)
+
+**No usar** `collectIsPressedAsState` + `MutableInteractionSource` — no cancela correctamente en `LazyColumn` ni `verticalScroll`, dejando el highlight pegado.
+
+**Usar siempre:**
+```kotlin
+var pressed by remember { mutableStateOf(false) }
+val bgColor by animateColorAsState(
+    targetValue = if (pressed) BrandPrimarySurface else BackgroundSurface,
+    animationSpec = tween(durationMillis = if (pressed) 40 else 200),
+    label = ""
+)
+Modifier.pointerInput(onClick) {
+    detectTapGestures(
+        onPress = {
+            pressed = true
+            try { tryAwaitRelease() } finally { pressed = false }
+        },
+        onTap = { onClick() }
+    )
+}
+```
+El `try/finally` garantiza que `pressed` siempre vuelve a `false` aunque el gesto sea cancelado por scroll.
+
+---
+
 ## Progreso general
 
 ```
 Sistema de diseño    [✅][✅][✅][✅]              4/4
-Flujo 1              [✅][✅][✅][🔴][🔴][🔴][✅]   4/7 (sin Splash)
+Flujo 1              [✅][✅][✅][✅][🔴][✅][✅]   6/7 mergeadas · 1 stub (ProceduresScreen)
 Flujo 2              [✅][✅][✅][✅][✅]           5/5
+Animaciones + UI     [✅][✅][✅][✅][✅][✅][✅]   mergeado en main (PR #7)
 ```
 
-> Última actualización: 2026-06-28 (HelpScreen ✅ completa con frame 09 + 09b; Flujo 1: 4/7)
+> Última actualización: 2026-07-01 (PR #7 mergeado; **ProceduresScreen es la única pantalla de contenido pendiente**)
