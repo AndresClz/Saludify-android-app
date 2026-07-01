@@ -104,6 +104,7 @@ MainScreen → SacarTurnoScreen (scaffold con header+stepper fijos)
 | `ui/theme/Type.kt` | ✅ DM Sans variable, 13 estilos M3, pesos via `FontVariation.Settings` |
 | `ui/theme/Shape.kt` | ✅ SaludifyShapes + SaludifyRadius |
 | `res/font/dm_sans.ttf` | ✅ Variable font (eje `wght` 100–1000) |
+| `res/drawable/ic_logo.xml` | ✅ Vector Drawable — logo real de Saludify, tintado con `BrandPrimary` |
 | `material-icons-extended` | ✅ En build.gradle.kts vía BOM |
 
 **Nota `Type.kt`:** requiere `@file:OptIn(ExperimentalTextApi::class)`. Cada peso usa `FontVariation.Settings(FontVariation.weight(N))` para forzar el eje `wght` explícitamente — sin esto el OS renderiza todo en Regular (defecto del archivo).
@@ -116,7 +117,7 @@ MainScreen → SacarTurnoScreen (scaffold con header+stepper fijos)
 
 | Sección | Implementación |
 |---|---|
-| Header | Logo badge "S" 24dp + "Saludify" 14sp Bold · derecha: pill "Ver token" + bell 34dp + avatar 34dp · `statusBarsPadding()` en el Row |
+| Header | `ic_logo` 24dp tintado `BrandPrimary` + "Saludify" 14sp Bold · derecha: pill "Ver token" + bell 34dp + avatar 34dp · `statusBarsPadding()` en el Row |
 | Credenciales | `HorizontalPager` (2 páginas) con `contentPadding(start=18,end=44)` y `pageSpacing=12` — peek nativo · dots reactivos a `pagerState.currentPage` |
 | Próximo turno | Barra header `BrandPrimary` + dot verde `#4ADE80` + "en 2 días" · body: avatar "RS" 42dp + doctor info + pill "Detalle" · borde `BrandPrimaryBorder` |
 | Accesos rápidos | Cards horizontales (Row), todos `BrandPrimarySurface`/`BrandPrimary`, gap 8dp, radius `SaludifyRadius.card` (14dp) |
@@ -145,7 +146,7 @@ Column {
 }
 ```
 
-**Header común:** Badge "S" 24×24dp `BrandPrimary` radius 7dp + título 17sp Bold `TextDefault` + placeholder 24dp derecha (o ícono).
+**Header común:** `Image(painterResource(R.drawable.ic_logo), Modifier.size(24.dp), colorFilter = ColorFilter.tint(BrandPrimary))` + título 17sp Bold `TextDefault` + placeholder 24dp derecha (o ícono).
 
 **FAB Gemini (aparece en 06, 07, 08):** 52dp circle, gradient `#4285f4 → #7c3aed → #db2777`, estrella 4 puntas blanca, shadow `0 4px 18px rgba(124,58,237,.45)`, `position: absolute; bottom: 74dp; right: 16dp; zIndex: 20`.
 
@@ -378,7 +379,7 @@ PR #7 `feature/animations` mergeado a `main` el 2026-07-01. Incluye:
    - `ProceduresMenuCard` (ProceduresScreen) — fondo + borde animados
 8. Patrón consolidado: `collectIsPressedAsState` NO funciona en `LazyColumn` ni `verticalScroll`; usar siempre `pointerInput + detectTapGestures` con `try/finally`
 
-**Próximo trabajo:** mergear PR #9 y preparar demo.
+**Próximo trabajo:** implementar SplashScreen (Frame 01) y preparar demo.
 
 ---
 
@@ -427,4 +428,4 @@ Flujo 2              [✅][✅][✅][✅][✅]           5/5
 Animaciones + UI     [✅][✅][✅][✅][✅][✅][✅]   mergeado en main (PR #7)
 ```
 
-> Última actualización: 2026-07-01 (PR #8 mergeado · PR #9 abierto con fixes de ProceduresScreen · **todas las pantallas de contenido implementadas**)
+> Última actualización: 2026-07-01 (PR #9 mergeado · logo SVG importado como `ic_logo.xml` · badge "S" reemplazado por logo real en las 6 pantallas · **próximo: SplashScreen**)

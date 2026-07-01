@@ -2,6 +2,7 @@ package com.example.saludify.presentation.screens.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -46,7 +47,10 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import com.example.saludify.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -118,20 +122,12 @@ private fun HomeHeader(usuario: Usuario) {
             horizontalArrangement = Arrangement.spacedBy(7.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(24.dp)
-                    .background(BrandPrimary, SaludifyRadius.icon),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "S",
-                    color = TextOnPrimary,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    lineHeight = 1.em
-                )
-            }
+            Image(
+                painter = painterResource(R.drawable.ic_logo),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(BrandPrimary)
+            )
             Text(
                 text = "Saludify",
                 fontSize = 14.sp,

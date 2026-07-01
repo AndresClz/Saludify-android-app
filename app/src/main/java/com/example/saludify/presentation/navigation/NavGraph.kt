@@ -16,6 +16,7 @@ import com.example.saludify.presentation.screens.main.MainScreen
 import com.example.saludify.presentation.screens.onboarding.OnboardingScreen
 import com.example.saludify.presentation.screens.profile.ProfileScreen
 import com.example.saludify.presentation.screens.sacaturno.SacarTurnoScreen
+import com.example.saludify.presentation.screens.splash.SplashScreen
 
 @Composable
 fun NavGraph() {
@@ -23,13 +24,37 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Onboarding.route,
+        startDestination = Routes.Splash.route,
         enterTransition    = { slideInHorizontally(initialOffsetX = { it }) },
         exitTransition     = { slideOutHorizontally(targetOffsetX = { -it / 3 }) },
         popEnterTransition = { slideInHorizontally(initialOffsetX = { -it / 3 }) },
         popExitTransition  = { slideOutHorizontally(targetOffsetX = { it }) }
     ) {
-        composable(Routes.Onboarding.route) {
+        composable(
+            route = Routes.Splash.route,
+            enterTransition    = { fadeIn(tween(300)) },
+            exitTransition     = { fadeOut(tween(300)) },
+            popEnterTransition = { fadeIn(tween(300)) },
+            popExitTransition  = { fadeOut(tween(300)) }
+        ) {
+            SplashScreen(
+                onNavigateToOnboarding = {
+                    navController.navigate(Routes.Onboarding.route) {
+                        popUpTo(Routes.Splash.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Routes.Onboarding.route,
+            enterTransition = {
+                if (initialState.destination.route == Routes.Splash.route)
+                    fadeIn(tween(400))
+                else
+                    slideInHorizontally(initialOffsetX = { -it / 3 })
+            }
+        ) {
             OnboardingScreen(
                 onAfiliadoClick = { navController.navigate(Routes.Login.route) }
             )
